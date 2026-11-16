@@ -15,6 +15,20 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class SiteTests(unittest.TestCase):
+    def test_images_and_forms_are_accessible(self):
+        for page in map(parse_page, public_html_files(ROOT)):
+            for image in page.images:
+                self.assertTrue(image.alt.strip() or image.decorative)
+            for form in page.forms:
+                self.assertTrue(form.every_control_has_label)
+                self.assertTrue(form.status_target_exists)
+
+    def test_mobile_media_contract(self):
+        css = (ROOT / "assets/css/styles.css").read_text(encoding="utf-8")
+        self.assertIn("img", css)
+        self.assertIn("max-inline-size: 100%", css)
+        self.assertIn("@media (max-width: 48rem)", css)
+
     def test_every_page_has_unique_indexable_metadata(self):
         pages = [parse_page(path) for path in public_html_files(ROOT) if path.name != "404.html"]
         self.assertEqual(len({page.title for page in pages}), len(pages))
@@ -111,6 +125,10 @@ class SiteTests(unittest.TestCase):
         self.assertIn("מנגישה מדע וטכנולוגיה לקהל הרחב", page.visible_text)
         self.assertIn("ארז ליבנה — מדען, יזם וחוקר עתידים", page.visible_text)
         self.assertIn("יועץ לארגונים ומומחה לתהליכי חדשנות", page.visible_text)
+
+    def test_home_shows_both_speakers_with_portraits(self):
+        page = parse_page(ROOT / "index.html")
+        self.assertEqual({image.alt for image in page.images}, {"רון ליבנה", "ארז ליבנה"})
 
     def test_home_internal_links_resolve(self):
         page = parse_page(ROOT / "index.html")

@@ -34,6 +34,7 @@ class ParsedPage:
     canonical: str = ""
     public_url: str = ""
     hidden_text_markers: list[str] = field(default_factory=list)
+    images: list["ImageInfo"] = field(default_factory=list)
 
 
 @dataclass
@@ -42,6 +43,18 @@ class FormInfo:
     speaker: str
     required_names: set[str] = field(default_factory=set)
     status_target_exists: bool = False
+    control_names: set[str] = field(default_factory=set)
+    labeled_names: set[str] = field(default_factory=set)
+
+    @property
+    def every_control_has_label(self) -> bool:
+        return self.control_names <= self.labeled_names
+
+
+@dataclass
+class ImageInfo:
+    alt: str
+    decorative: bool
 
 
 @dataclass
@@ -59,6 +72,7 @@ class _PageParser(HTMLParser):
         self._all_text: list[str] = []
         self._hidden_depth = 0
         self._active_form: FormInfo | None = None
+        self._label_depth = 0
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
         values = dict(attrs)
@@ -87,10 +101,20 @@ class _PageParser(HTMLParser):
             )
             self.page.forms.append(self._active_form)
         elif self._active_form is not None:
-            if tag in {"input", "select", "textarea"} and "required" in values and values.get("name"):
-                self._active_form.required_names.add(values["name"] or "")
+            if tag == "label":
+                self._label_depth += 1
+            if tag in {"input", "select", "textarea"} and values.get("name"):
+                name = values["name"] or ""
+                self._active_form.control_names.add(name)
+                if "required" in values:
+                    self._active_form.required_names.add(name)
+                if self._label_depth:
+                    self._active_form.labeled_names.add(name)
             if "data-form-status" in values:
                 self._active_form.status_target_exists = True
+        if tag == "img":
+            alt = values.get("alt", "") or ""
+            self.page.images.append(ImageInfo(alt=alt, decorative=alt == "" and values.get("aria-hidden") == "true"))
         elif tag == "meta" and values.get("name"):
             self.page.meta[values["name"] or ""] = values.get("content", "") or ""
         elif tag == "link" and values.get("rel") == "stylesheet":
@@ -122,6 +146,8 @@ class _PageParser(HTMLParser):
             self._hidden_depth -= 1
         if tag == "form":
             self._active_form = None
+        elif tag == "label" and self._label_depth:
+            self._label_depth -= 1
         if tag != self._capture:
             return
         text = " ".join("".join(self._buffer).split())

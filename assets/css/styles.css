@@ -26,6 +26,7 @@ body {
 }
 
 a { color: inherit; }
+img { display: block; max-inline-size: 100%; block-size: auto; }
 a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
   outline: 0.2rem solid currentColor;
   outline-offset: 0.2rem;
@@ -91,6 +92,14 @@ h1 { font-size: clamp(2.25rem, 6vw, 5rem); max-width: 15ch; }
   box-shadow: var(--shadow);
 }
 .speaker-card { display: flex; flex-direction: column; justify-content: space-between; gap: 2rem; }
+.speaker-card__portrait {
+  width: 100%;
+  height: clamp(12rem, 22vw, 18rem);
+  border-radius: calc(var(--radius) * 0.75);
+  background: var(--cream);
+  object-fit: cover;
+  object-position: center 20%;
+}
 .speaker-card h2 { margin-block: 0; font-size: clamp(1.75rem, 3.2vw, 2.85rem); }
 .speaker-card__lead { color: var(--muted); font-size: 1.15rem; }
 .speaker-card.speaker-ron { border-block-start: 0.45rem solid var(--ron); }

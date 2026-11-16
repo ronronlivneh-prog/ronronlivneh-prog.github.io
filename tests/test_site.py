@@ -69,6 +69,17 @@ class SiteTests(unittest.TestCase):
             )
             self.assertTrue(form.status_target_exists)
 
+    def test_local_only_forms_are_visibly_inert(self):
+        for form in all_contact_forms(ROOT):
+            self.assertTrue(form.pending_notice_exists)
+            self.assertTrue(form.pending_controls_disabled)
+
+    def test_contact_whatsapp_buttons_keep_accessible_contrast(self):
+        css = (ROOT / "assets/css/styles.css").read_text(encoding="utf-8")
+        self.assertIn(".speaker-ron .contact-panel__intro .button", css)
+        self.assertIn(".speaker-erez .contact-panel__intro .button", css)
+        self.assertIn("background: white; color: var(--ink);", css)
+
     def test_erez_lecture_pages_and_service_sections(self):
         expected = {
             "erez-livneh/evolution-of-ai/index.html": "האבולוציה של הבינה המלאכותית",

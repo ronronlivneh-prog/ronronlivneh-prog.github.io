@@ -189,6 +189,16 @@ blockquote footer { margin-block-start: 0.75rem; color: var(--muted); }
   background: var(--paper);
   color: var(--ink);
 }
+.local-form-notice {
+  margin: 0;
+  padding: 0.8rem 1rem;
+  border-inline-start: 0.3rem solid currentColor;
+  border-radius: 0.5rem;
+  background: var(--cream);
+  font-weight: 700;
+}
+.contact-form fieldset { display: grid; gap: 1rem; min-inline-size: 0; margin: 0; padding: 0; border: 0; }
+.contact-form fieldset[disabled] { opacity: 0.68; }
 .form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
 .contact-form label { display: grid; gap: 0.35rem; font-size: 0.9rem; font-weight: 700; }
 .contact-form input,
@@ -278,6 +288,8 @@ blockquote footer { margin-block-start: 0.75rem; color: var(--muted); }
 }
 .speaker-ron .button { background: var(--ron); }
 .speaker-erez .button { background: var(--erez); }
+.speaker-ron .contact-panel__intro .button,
+.speaker-erez .contact-panel__intro .button { background: white; color: var(--ink); }
 .site-footer { padding-block: 2rem; color: var(--muted); border-block-start: 1px solid var(--line); }
 
 @media (max-width: 48rem) {

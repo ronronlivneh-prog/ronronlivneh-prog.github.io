@@ -45,6 +45,8 @@ class FormInfo:
     status_target_exists: bool = False
     control_names: set[str] = field(default_factory=set)
     labeled_names: set[str] = field(default_factory=set)
+    pending_controls_disabled: bool = False
+    pending_notice_exists: bool = False
 
     @property
     def every_control_has_label(self) -> bool:
@@ -101,6 +103,10 @@ class _PageParser(HTMLParser):
             )
             self.page.forms.append(self._active_form)
         elif self._active_form is not None:
+            if tag == "fieldset" and "disabled" in values:
+                self._active_form.pending_controls_disabled = True
+            if "data-local-form-notice" in values:
+                self._active_form.pending_notice_exists = True
             if tag == "label":
                 self._label_depth += 1
             if tag in {"input", "select", "textarea"} and values.get("name"):

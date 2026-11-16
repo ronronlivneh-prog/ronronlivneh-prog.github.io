@@ -170,7 +170,36 @@ blockquote footer { margin-block-start: 0.75rem; color: var(--muted); }
   color: white;
 }
 .contact-panel h2 { margin-block: 0.25rem; font-size: clamp(1.8rem, 4vw, 3rem); }
-.contact-panel .button { justify-self: end; background: white; color: var(--ink); }
+.contact-panel .button { background: white; color: var(--ink); }
+.contact-panel__intro { align-self: start; }
+.contact-form {
+  display: grid;
+  gap: 1rem;
+  padding: clamp(1.25rem, 3vw, 2rem);
+  border-radius: var(--radius);
+  background: var(--paper);
+  color: var(--ink);
+}
+.form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+.contact-form label { display: grid; gap: 0.35rem; font-size: 0.9rem; font-weight: 700; }
+.contact-form input,
+.contact-form select,
+.contact-form textarea {
+  width: 100%;
+  min-height: 3rem;
+  border: 1px solid var(--line);
+  border-radius: 0.65rem;
+  background: white;
+  color: var(--ink);
+  font: inherit;
+  padding: 0.7rem 0.85rem;
+}
+.contact-form textarea { resize: vertical; }
+.contact-form .button { justify-self: start; border: 0; background: var(--ink); color: white; cursor: pointer; }
+.contact-form .button:disabled { cursor: wait; opacity: 0.6; }
+.form-consent, .form-status { margin: 0; color: var(--muted); font-size: 0.82rem; }
+.form-status { min-height: 1.5rem; font-weight: 700; }
+.honeypot { position: absolute !important; inline-size: 1px; block-size: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 .site-footer { display: flex; justify-content: space-between; gap: 1rem; }
 
 .lecture-hero { padding-block-end: clamp(3rem, 6vw, 5rem); }
@@ -252,7 +281,7 @@ blockquote footer { margin-block-start: 0.75rem; color: var(--muted); }
   .card-grid--three { grid-template-columns: 1fr; }
   .content-card { min-height: 0; }
   .logo-strip { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .contact-panel .button { justify-self: start; }
+  .form-grid { grid-template-columns: 1fr; }
   .site-footer { flex-direction: column; }
   .service-grid, .consulting-section, .evidence-section { grid-template-columns: 1fr; }
   .consulting-section figure { order: 2; }

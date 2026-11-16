@@ -1,13 +1,33 @@
 from pathlib import Path
 import unittest
 
-from tests.site_parser import parse_page, public_html_files, root_relative_url_to_file
+from tests.site_parser import all_contact_forms, parse_page, public_html_files, root_relative_url_to_file
 
 
 ROOT = Path(__file__).resolve().parents[1]
 
 
 class SiteTests(unittest.TestCase):
+    def test_contact_routes_match_page_owner_in_local_mode(self):
+        for path in public_html_files(ROOT):
+            page = parse_page(path)
+            if page.speaker not in {"ron", "erez"}:
+                continue
+            self.assertEqual({form.speaker for form in page.forms}, {page.speaker}, str(path))
+            self.assertEqual({form.action for form in page.forms}, {""}, str(path))
+            self.assertEqual({link.speaker for link in page.whatsapp_links}, {page.speaker}, str(path))
+            self.assertRegex(page.whatsapp_links[0].href, r"^https://wa\.me/[1-9]\d{7,14}\?text=", str(path))
+
+    def test_contact_forms_have_required_fields_and_status_target(self):
+        forms = all_contact_forms(ROOT)
+        self.assertEqual(len(forms), 9)
+        for form in forms:
+            self.assertEqual(
+                form.required_names,
+                {"name", "organization", "phone", "email", "service", "message"},
+            )
+            self.assertTrue(form.status_target_exists)
+
     def test_erez_lecture_pages_and_service_sections(self):
         expected = {
             "erez-livneh/evolution-of-ai/index.html": "האבולוציה של הבינה המלאכותית",

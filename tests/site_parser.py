@@ -26,6 +26,23 @@ class ParsedPage:
     internal_links: list[str] = field(default_factory=list)
     primary_routes: list[str] = field(default_factory=list)
     section_ids: set[str] = field(default_factory=set)
+    speaker: str = ""
+    forms: list["FormInfo"] = field(default_factory=list)
+    whatsapp_links: list["WhatsAppInfo"] = field(default_factory=list)
+
+
+@dataclass
+class FormInfo:
+    action: str
+    speaker: str
+    required_names: set[str] = field(default_factory=set)
+    status_target_exists: bool = False
+
+
+@dataclass
+class WhatsAppInfo:
+    href: str
+    speaker: str
 
 
 class _PageParser(HTMLParser):
@@ -36,6 +53,7 @@ class _PageParser(HTMLParser):
         self._buffer: list[str] = []
         self._all_text: list[str] = []
         self._hidden_depth = 0
+        self._active_form: FormInfo | None = None
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
         values = dict(attrs)
@@ -44,8 +62,25 @@ class _PageParser(HTMLParser):
         if tag == "html":
             self.page.lang = values.get("lang", "") or ""
             self.page.direction = values.get("dir", "") or ""
+        if tag == "body":
+            classes = set((values.get("class") or "").split())
+            if "speaker-ron" in classes:
+                self.page.speaker = "ron"
+            elif "speaker-erez" in classes:
+                self.page.speaker = "erez"
         if tag == "section" and values.get("id"):
             self.page.section_ids.add(values["id"] or "")
+        if tag == "form":
+            self._active_form = FormInfo(
+                action=values.get("action", "") or "",
+                speaker=values.get("data-speaker", "") or "",
+            )
+            self.page.forms.append(self._active_form)
+        elif self._active_form is not None:
+            if tag in {"input", "select", "textarea"} and "required" in values and values.get("name"):
+                self._active_form.required_names.add(values["name"] or "")
+            if "data-form-status" in values:
+                self._active_form.status_target_exists = True
         elif tag == "meta" and values.get("name"):
             self.page.meta[values["name"] or ""] = values.get("content", "") or ""
         elif tag == "link" and values.get("rel") == "stylesheet":
@@ -58,6 +93,8 @@ class _PageParser(HTMLParser):
             classes = (values.get("class") or "").split()
             if "speaker-route" in classes:
                 self.page.primary_routes.append(href)
+            if href.startswith("https://wa.me/"):
+                self.page.whatsapp_links.append(WhatsAppInfo(href=href, speaker=self.page.speaker))
         elif tag in {"title", "h1"}:
             self._capture = tag
             self._buffer = []
@@ -71,6 +108,8 @@ class _PageParser(HTMLParser):
     def handle_endtag(self, tag: str) -> None:
         if tag in {"script", "style"} and self._hidden_depth:
             self._hidden_depth -= 1
+        if tag == "form":
+            self._active_form = None
         if tag != self._capture:
             return
         text = " ".join("".join(self._buffer).split())
@@ -104,3 +143,10 @@ def root_relative_url_to_file(root: Path, url: str) -> Path:
     if path.endswith("/"):
         return candidate / "index.html"
     return candidate
+
+
+def all_contact_forms(root: Path) -> list[FormInfo]:
+    forms: list[FormInfo] = []
+    for path in public_html_files(root):
+        forms.extend(parse_page(path).forms)
+    return forms

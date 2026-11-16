@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
   <title>ארז ליבנה — הרצאות, סדנאות וייעוץ לעתיד וחדשנות</title>
-  <link rel="stylesheet" href="/assets/css/styles.css"><script src="/assets/js/site.js" defer></script>
+  <link rel="stylesheet" href="/assets/css/styles.css"><script src="/assets/js/site.js" defer></script><script src="/assets/js/forms.js" defer></script>
 </head>
 <body class="speaker-erez">
   <a class="skip-link" href="#main">דלגו לתוכן</a>
@@ -41,7 +41,14 @@
       <ul class="client-list" aria-label="ארגונים שעבדו עם ארז"><li>Google</li><li>Microsoft</li><li>Amdocs</li><li>טבע</li><li>שטראוס</li><li>תנובה</li><li>Roche</li><li>P&amp;G</li><li>רפאל</li><li>אלתא</li></ul>
     </section>
 
-    <section id="contact" class="section contact-panel" data-speaker="erez"><div><p class="eyebrow">הרצאה, סדנה או ייעוץ</p><h2>מה הארגון שלכם צריך עכשיו?</h2><p>ספרו בקצרה על הקהל, האירוע או האתגר, ונבחן יחד מהו הפורמט המתאים.</p></div><a class="button" href="https://wa.me/972503834022">לשיחה עם ארז בוואטסאפ</a></section>
+    <section id="contact" class="section contact-panel" data-speaker="erez">
+      <div class="contact-panel__intro"><p class="eyebrow">הרצאה, סדנה או ייעוץ</p><h2>מה הארגון שלכם צריך עכשיו?</h2><p>ספרו בקצרה על הקהל, האירוע או האתגר, ונבחן יחד מהו הפורמט המתאים.</p><a class="button" href="https://wa.me/972503834022?text=היי%20ארז,%20אשמח%20לקבל%20פרטים">לשיחה עם ארז בוואטסאפ</a></div>
+      <form class="contact-form" action="" method="post" data-contact-form data-speaker="erez" data-endpoint-status="pending">
+        <div class="form-grid"><label>שם מלא<input name="name" autocomplete="name" required></label><label>ארגון<input name="organization" autocomplete="organization" required></label><label>טלפון<input name="phone" type="tel" autocomplete="tel" required></label><label>אימייל<input name="email" type="email" autocomplete="email" required></label></div>
+        <label>שירות מבוקש<select name="service" required><option value="">בחרו שירות</option><option>האבולוציה של הבינה המלאכותית</option><option>הדרך הטובה ביותר לחזות את העתיד היא ליצור אותו</option><option>עתיד האנושות: קולנוע מול מדע</option><option>סדנת חשיבת עתיד</option><option>סדנת חדשנות תוך־ארגונית</option><option>ייעוץ להנהלות</option></select></label>
+        <label>כמה מילים על הצורך<textarea name="message" rows="4" required></textarea></label><label class="honeypot" aria-hidden="true">נא להשאיר ריק<input name="_gotcha" tabindex="-1" autocomplete="off"></label><p class="form-consent">הפרטים ישמשו רק כדי לחזור אליכם בנוגע לפנייה.</p><button class="button" type="submit">שליחת פרטים</button><p class="form-status" data-form-status role="status" aria-live="polite"></p>
+      </form>
+    </section>
   </main>
   <footer class="site-footer"><span>© <span data-current-year>2026</span> ארז ליבנה</span><a href="/">בחזרה לבחירת מרצה</a></footer>
 </body>

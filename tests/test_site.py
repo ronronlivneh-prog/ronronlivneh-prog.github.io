@@ -1,13 +1,40 @@
 from pathlib import Path
 import unittest
 
-from tests.site_parser import all_contact_forms, parse_page, public_html_files, root_relative_url_to_file
+from tests.site_parser import (
+    PUBLIC_ORIGIN,
+    all_contact_forms,
+    parse_page,
+    public_html_files,
+    read_sitemap_urls,
+    root_relative_url_to_file,
+)
 
 
 ROOT = Path(__file__).resolve().parents[1]
 
 
 class SiteTests(unittest.TestCase):
+    def test_every_page_has_unique_indexable_metadata(self):
+        pages = [parse_page(path) for path in public_html_files(ROOT) if path.name != "404.html"]
+        self.assertEqual(len({page.title for page in pages}), len(pages))
+        descriptions = [page.meta.get("description", "") for page in pages]
+        self.assertTrue(all(descriptions))
+        self.assertEqual(len(set(descriptions)), len(pages))
+        for page in pages:
+            self.assertEqual(page.canonical, PUBLIC_ORIGIN + page.public_url)
+            self.assertNotIn("noindex", page.meta.get("robots", ""))
+            self.assertEqual(len(page.h1_texts), 1)
+            self.assertFalse(page.hidden_text_markers)
+
+    def test_sitemap_matches_public_pages(self):
+        expected = {
+            PUBLIC_ORIGIN + parse_page(path).public_url
+            for path in public_html_files(ROOT)
+            if path.name != "404.html"
+        }
+        self.assertEqual(read_sitemap_urls(ROOT / "sitemap.xml"), expected)
+
     def test_contact_routes_match_page_owner_in_local_mode(self):
         for path in public_html_files(ROOT):
             page = parse_page(path)

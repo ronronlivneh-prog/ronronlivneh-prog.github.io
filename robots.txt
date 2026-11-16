@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://ronronlivneh-prog.github.io/sitemap.xml

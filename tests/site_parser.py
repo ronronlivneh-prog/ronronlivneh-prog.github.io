@@ -4,9 +4,11 @@ from dataclasses import dataclass, field
 from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import urlparse
+from xml.etree import ElementTree
 
 
 PUBLIC_ORIGIN = "https://ronronlivneh-prog.github.io"
+SITE_ROOT = Path(__file__).resolve().parents[1]
 
 
 def public_html_files(root: Path) -> list[Path]:
@@ -29,6 +31,9 @@ class ParsedPage:
     speaker: str = ""
     forms: list["FormInfo"] = field(default_factory=list)
     whatsapp_links: list["WhatsAppInfo"] = field(default_factory=list)
+    canonical: str = ""
+    public_url: str = ""
+    hidden_text_markers: list[str] = field(default_factory=list)
 
 
 @dataclass
@@ -70,6 +75,11 @@ class _PageParser(HTMLParser):
                 self.page.speaker = "erez"
         if tag == "section" and values.get("id"):
             self.page.section_ids.add(values["id"] or "")
+        if "hidden" in values or "seo-only" in (values.get("class") or "").split():
+            self.page.hidden_text_markers.append(tag)
+        style = (values.get("style") or "").replace(" ", "").lower()
+        if "display:none" in style or "visibility:hidden" in style:
+            self.page.hidden_text_markers.append(tag)
         if tag == "form":
             self._active_form = FormInfo(
                 action=values.get("action", "") or "",
@@ -85,6 +95,8 @@ class _PageParser(HTMLParser):
             self.page.meta[values["name"] or ""] = values.get("content", "") or ""
         elif tag == "link" and values.get("rel") == "stylesheet":
             self.page.stylesheets.append(values.get("href", "") or "")
+        elif tag == "link" and values.get("rel") == "canonical":
+            self.page.canonical = values.get("href", "") or ""
         elif tag == "a" and values.get("href"):
             href = values["href"] or ""
             self.page.links.append(href)
@@ -129,6 +141,13 @@ def parse_page(path: Path) -> ParsedPage:
     parser = _PageParser()
     parser.feed(path.read_text(encoding="utf-8"))
     parser.close()
+    relative = path.resolve().relative_to(SITE_ROOT).as_posix()
+    if relative == "index.html":
+        parser.page.public_url = "/"
+    elif relative.endswith("/index.html"):
+        parser.page.public_url = "/" + relative.removesuffix("index.html")
+    else:
+        parser.page.public_url = "/" + relative
     return parser.page
 
 
@@ -150,3 +169,9 @@ def all_contact_forms(root: Path) -> list[FormInfo]:
     for path in public_html_files(root):
         forms.extend(parse_page(path).forms)
     return forms
+
+
+def read_sitemap_urls(path: Path) -> set[str]:
+    root = ElementTree.parse(path).getroot()
+    namespace = {"sm": "http://www.sitemaps.org/schemas/sitemap/0.9"}
+    return {element.text or "" for element in root.findall("sm:url/sm:loc", namespace)}

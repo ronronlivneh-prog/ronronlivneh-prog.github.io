@@ -1,13 +1,46 @@
 from pathlib import Path
 import unittest
 
-from tests.site_parser import parse_page, root_relative_url_to_file
+from tests.site_parser import parse_page, public_html_files, root_relative_url_to_file
 
 
 ROOT = Path(__file__).resolve().parents[1]
 
 
 class SiteTests(unittest.TestCase):
+    def test_ron_lecture_pages_and_positioning(self):
+        expected = {
+            "ron-livneh/ai-understand-the-revolution/index.html": "AI: להבין את המהפכה",
+            "ron-livneh/future-of-work/index.html": "עתיד העבודה: מה יישאר אנושי בעולם אוטומטי?",
+            "ron-livneh/future-of-the-human-body/index.html": "עתיד הגוף האנושי",
+            "ron-livneh/dark-side-of-beauty/index.html": "הצד האפל של היופי",
+        }
+        for rel, heading in expected.items():
+            path = ROOT / rel
+            self.assertTrue(path.exists(), rel)
+            page = parse_page(path)
+            self.assertEqual(page.h1_texts, [heading])
+            self.assertIn("/ron-livneh/", page.internal_links)
+
+    def test_ron_copy_avoids_outdated_positioning(self):
+        text = " ".join(
+            parse_page(path).visible_text
+            for path in public_html_files(ROOT)
+            if "ron-livneh" in str(path)
+        )
+        self.assertNotIn("עתידנית הבית", text)
+        self.assertNotIn("מנהלת המיזם החינוכי", text)
+
+    def test_ron_ai_page_mentions_former_names_visibly(self):
+        text = parse_page(ROOT / "ron-livneh/ai-understand-the-revolution/index.html").visible_text
+        for former_name in [
+            "אני הרובוט שלך",
+            "כשבינה מלאכותית כותבת שירה",
+            "מהפכת הבינה המלאכותית",
+            "בינה מלאכותית למתחילים",
+        ]:
+            self.assertIn(former_name, text)
+
     def test_home_has_exactly_two_primary_speaker_routes(self):
         page = parse_page(ROOT / "index.html")
         self.assertEqual(page.primary_routes, ["/ron-livneh/", "/erez-livneh/"])

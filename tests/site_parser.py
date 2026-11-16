@@ -9,6 +9,10 @@ from urllib.parse import urlparse
 PUBLIC_ORIGIN = "https://ronronlivneh-prog.github.io"
 
 
+def public_html_files(root: Path) -> list[Path]:
+    return sorted(path for path in root.rglob("*.html") if ".superpowers" not in path.parts and "tmp" not in path.parts)
+
+
 @dataclass
 class ParsedPage:
     lang: str = ""

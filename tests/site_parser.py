@@ -25,6 +25,7 @@ class ParsedPage:
     links: list[str] = field(default_factory=list)
     internal_links: list[str] = field(default_factory=list)
     primary_routes: list[str] = field(default_factory=list)
+    section_ids: set[str] = field(default_factory=set)
 
 
 class _PageParser(HTMLParser):
@@ -43,6 +44,8 @@ class _PageParser(HTMLParser):
         if tag == "html":
             self.page.lang = values.get("lang", "") or ""
             self.page.direction = values.get("dir", "") or ""
+        if tag == "section" and values.get("id"):
+            self.page.section_ids.add(values["id"] or "")
         elif tag == "meta" and values.get("name"):
             self.page.meta[values["name"] or ""] = values.get("content", "") or ""
         elif tag == "link" and values.get("rel") == "stylesheet":

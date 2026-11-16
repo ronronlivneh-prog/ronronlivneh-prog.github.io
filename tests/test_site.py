@@ -8,6 +8,22 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class SiteTests(unittest.TestCase):
+    def test_erez_lecture_pages_and_service_sections(self):
+        expected = {
+            "erez-livneh/evolution-of-ai/index.html": "האבולוציה של הבינה המלאכותית",
+            "erez-livneh/create-the-future/index.html": "הדרך הטובה ביותר לחזות את העתיד היא ליצור אותו",
+            "erez-livneh/cinema-vs-science/index.html": "עתיד האנושות: קולנוע מול מדע",
+        }
+        for rel, heading in expected.items():
+            path = ROOT / rel
+            self.assertTrue(path.exists(), rel)
+            self.assertEqual(parse_page(path).h1_texts, [heading])
+        profile = parse_page(ROOT / "erez-livneh/index.html")
+        self.assertEqual(
+            profile.section_ids & {"lectures", "workshops", "consulting"},
+            {"lectures", "workshops", "consulting"},
+        )
+
     def test_ron_lecture_pages_and_positioning(self):
         expected = {
             "ron-livneh/ai-understand-the-revolution/index.html": "AI: להבין את המהפכה",

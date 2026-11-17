@@ -41,7 +41,8 @@ class SiteTests(unittest.TestCase):
         self.assertNotIn("ron-livneh-portrait.webp", public_html)
         self.assertIn("ron-livneh-blue-shirt.jpg", (ROOT / "index.html").read_text(encoding="utf-8"))
         profile_html = (ROOT / "ron-livneh/index.html").read_text(encoding="utf-8")
-        self.assertIn("ron-livneh-black-suit.jpg", profile_html)
+        self.assertIn("ron-livneh-black-suit-corrected.png", profile_html)
+        self.assertNotIn("ron-livneh-black-suit.jpg", profile_html)
         self.assertIn("ron-livneh-tea.jpg", profile_html)
 
     def test_speaker_profiles_show_company_logos_and_approved_testimonial(self):

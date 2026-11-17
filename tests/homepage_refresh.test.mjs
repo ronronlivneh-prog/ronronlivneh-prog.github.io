@@ -42,7 +42,8 @@ test("Ron uses the approved portraits instead of the pink portrait", () => {
 
   assert.doesNotMatch(allPublicHtml, /ron-livneh-portrait\.webp/);
   assert.match(homepage, /ron-livneh-blue-shirt\.jpg/);
-  assert.match(profile, /ron-livneh-black-suit\.jpg/);
+  assert.match(profile, /ron-livneh-black-suit-corrected\.png/);
+  assert.doesNotMatch(profile, /ron-livneh-black-suit\.jpg/);
   assert.match(profile, /ron-livneh-tea\.jpg/);
 });
 

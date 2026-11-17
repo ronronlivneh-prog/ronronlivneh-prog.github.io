@@ -314,6 +314,13 @@ blockquote footer { margin-block-start: 0.75rem; color: var(--muted); }
 }
 .consulting-section figure { align-self: end; margin: 0; }
 .consulting-section img { display: block; max-width: 100%; max-height: 32rem; margin-inline: auto; object-fit: contain; }
+.venture-section {
+  background: var(--paper);
+  border-inline-start: 0.5rem solid var(--erez);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+.venture-section > * { max-width: 65rem; }
 .evidence-section { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: clamp(2rem, 6vw, 6rem); align-items: start; }
 .button {
   display: inline-flex;

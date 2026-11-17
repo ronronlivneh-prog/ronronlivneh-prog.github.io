@@ -78,3 +78,25 @@ test("both speaker pages show real company logo images and Ron shows Yael's test
   assert.match(ron, /נהננו מאוד!<br>תודה רבה!/);
   assert.doesNotMatch(read("assets/css/styles.css"), /\.logo-strip img\s*\{[^}]*grayscale/s);
 });
+
+test("the beauty lecture is presented as a compact secondary option", () => {
+  const ron = read("ron-livneh/index.html");
+  const css = read("assets/css/styles.css");
+
+  assert.match(ron, /class="section special-feature special-feature--compact"/);
+  assert.doesNotMatch(ron, /class="special-feature__mark"/);
+  assert.match(css, /\.special-feature--compact\s*\{[^}]*min-height:\s*0/s);
+  assert.match(css, /\.special-feature--compact h2\s*\{[^}]*font-size:/s);
+});
+
+test("Ron's About section presents her technology work and human perspective", () => {
+  const ron = read("ron-livneh/index.html");
+  const css = read("assets/css/styles.css");
+
+  assert.match(ron, /<h2>בין טכנולוגיה, אנשים והעתיד<\/h2>/);
+  assert.match(ron, /רון ליבנה היא מרצה, מנהלת פרויקטים ומומחית לאוטומציה ובינה מלאכותית/);
+  assert.match(ron, /הייחוד שלה הוא ביכולת לחבר בין הפן הטכנולוגי לפן האנושי/);
+  assert.match(ron, /רון היא ביולוגית בהכשרתה, בעלת B\.Sc במדעי החיים מאוניברסיטת תל אביב ו־MBA בהצטיינות מאוניברסיטת בן־גוריון/);
+  assert.doesNotMatch(ron, /מדע מתקדם, בגובה העיניים/);
+  assert.match(css, /\.special-feature--compact \.text-link\s*\{[^}]*color:\s*#075f5b/s);
+});

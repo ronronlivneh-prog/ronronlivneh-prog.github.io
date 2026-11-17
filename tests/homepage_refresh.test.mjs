@@ -100,3 +100,17 @@ test("Ron's About section presents her technology work and human perspective", (
   assert.doesNotMatch(ron, /מדע מתקדם, בגובה העיניים/);
   assert.match(css, /\.special-feature--compact \.text-link\s*\{[^}]*color:\s*#075f5b/s);
 });
+
+test("only internal pages show a clear link back to the homepage", () => {
+  const homepagePath = fileURLToPath(new URL("index.html", root));
+  const homepage = read("index.html");
+  const internalPages = publicHtmlFiles(root).filter((path) => path !== homepagePath);
+
+  assert.doesNotMatch(homepage, /class="site-brand"/);
+  assert.ok(internalPages.length > 0);
+  for (const path of internalPages) {
+    const html = readFileSync(path, "utf8");
+    assert.match(html, /<a class="site-brand" href="\/">חזרה לעמוד הראשי<\/a>/, path);
+    assert.doesNotMatch(html, /<a class="site-brand"[^>]*>רון ליבנה · ארז ליבנה<\/a>/, path);
+  }
+});

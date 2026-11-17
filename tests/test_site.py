@@ -15,6 +15,47 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class SiteTests(unittest.TestCase):
+    def test_homepage_refresh(self):
+        page = parse_page(ROOT / "index.html")
+        css = (ROOT / "assets/css/styles.css").read_text(encoding="utf-8")
+        self.assertEqual(page.h1_texts, ["העתיד מתחיל כאן"])
+        self.assertIn(
+            "רעיונות גדולים, טכנולוגיות חדשות ושינויים שמעצבים את המחר - "
+            "בהרצאות, סדנאות וייעוץ שמביאים אותו אל הבמה ואל תוך הארגון.",
+            page.visible_text,
+        )
+        self.assertIn("gateway-section--shared-accent", (ROOT / "index.html").read_text(encoding="utf-8"))
+        self.assertIn("--gateway-accent: #405c66", css)
+        self.assertIn("text-align: center", css)
+
+    def test_public_html_avoids_long_dashes(self):
+        offenders = {
+            str(path.relative_to(ROOT)): [character for character in ("\u2013", "\u2014") if character in path.read_text(encoding="utf-8")]
+            for path in public_html_files(ROOT)
+            if any(character in path.read_text(encoding="utf-8") for character in ("\u2013", "\u2014"))
+        }
+        self.assertEqual(offenders, {})
+
+    def test_ron_uses_approved_portraits_instead_of_pink_portrait(self):
+        public_html = "\n".join(path.read_text(encoding="utf-8") for path in public_html_files(ROOT))
+        self.assertNotIn("ron-livneh-portrait.webp", public_html)
+        self.assertIn("ron-livneh-blue-shirt.jpg", (ROOT / "index.html").read_text(encoding="utf-8"))
+        profile_html = (ROOT / "ron-livneh/index.html").read_text(encoding="utf-8")
+        self.assertIn("ron-livneh-black-suit.jpg", profile_html)
+        self.assertIn("ron-livneh-tea.jpg", profile_html)
+
+    def test_speaker_profiles_show_company_logos_and_approved_testimonial(self):
+        ron = (ROOT / "ron-livneh/index.html").read_text(encoding="utf-8")
+        erez = (ROOT / "erez-livneh/index.html").read_text(encoding="utf-8")
+        self.assertEqual(ron.count('<img src="/assets/images/ron/logos/logo-'), 9)
+        self.assertGreaterEqual(erez.count('<img src="/assets/images/erez/logos/logo-'), 6)
+        self.assertNotIn('class="client-list"', erez)
+        self.assertIn('class="logo-strip logo-strip--erez"', erez)
+        self.assertIn(">בין לקוחותינו</h2>", ron)
+        self.assertIn(">בין לקוחותינו</h2>", erez)
+        self.assertIn("יעל, אלייד יוניברסל", ron)
+        self.assertIn("הרצאה מרתקת, סוחפת וסופר מעניינת אודות עתיד הגוף האנושי.", ron)
+
     def test_images_and_forms_are_accessible(self):
         for page in map(parse_page, public_html_files(ROOT)):
             for image in page.images:
@@ -132,9 +173,9 @@ class SiteTests(unittest.TestCase):
     def test_home_has_exactly_two_primary_speaker_routes(self):
         page = parse_page(ROOT / "index.html")
         self.assertEqual(page.primary_routes, ["/ron-livneh/", "/erez-livneh/"])
-        self.assertIn("רון ליבנה — מרצה ומומחית לאוטומציה ובינה מלאכותית", page.visible_text)
+        self.assertIn("רון ליבנה - מרצה ומומחית לאוטומציה ובינה מלאכותית", page.visible_text)
         self.assertIn("מנגישה מדע וטכנולוגיה לקהל הרחב", page.visible_text)
-        self.assertIn("ארז ליבנה — מדען, יזם וחוקר עתידים", page.visible_text)
+        self.assertIn("ארז ליבנה - מדען, יזם וחוקר עתידים", page.visible_text)
         self.assertIn("יועץ לארגונים ומומחה לתהליכי חדשנות", page.visible_text)
 
     def test_home_shows_both_speakers_with_portraits(self):

@@ -1,11 +1,11 @@
 # מקורות תמונות ההרצאות
 
-כל התמונות בעמודי ההרצאות הן צילומים אמיתיים מ-Unsplash ומ-Pexels, לשימוש בהתאם לרישיונות המאגרים.
+התמונות בעמודי ההרצאות הן צילומים אמיתיים של רון וארז, לצד צילום ברישיון להרצאה "הצד האפל של היופי".
 
-- `ai-revolution.jpg` - Bermix Studio: https://unsplash.com/photos/tTurhPw9bwQ
-- `future-of-work.jpg` - Cherrydeck: https://unsplash.com/photos/Qx7A7SChpnI
-- `future-human-body.jpg` - cottonbro studio, Pexels: https://www.pexels.com/photo/a-woman-with-a-prosthetic-arm-smiling-6153075/
-- `dark-side-beauty.jpg` - Antonio Friedemann, Pexels: https://www.pexels.com/photo/a-woman-with-nose-piercing-and-tattoos-5659486/
-- `ai-evolution.jpg` - Kawê Rodrigues: https://unsplash.com/photos/BuesDqQlBLU
-- `create-the-future.jpg` - Daniel Miksha: https://unsplash.com/photos/mbbPTklrRkU
-- `cinema-vs-science.jpg` - Alexandr Popadin: https://unsplash.com/photos/7BsVs1WozGw
+- `ai-revolution.jpg` - צילום במה של רון ליבנה מתוך האתר הרשמי שלה בקאנבה: https://ronlivneh.my.canva.site/
+- `future-of-work.jpg` - צילום במה של רון ליבנה מתוך האתר הרשמי שלה בקאנבה: https://ronlivneh.my.canva.site/
+- `future-human-body.jpg` - צילום במה של רון ליבנה מתוך האתר הרשמי שלה בקאנבה: https://ronlivneh.my.canva.site/
+- `dark-side-beauty.jpg` - CEphoto, Uwe Aranas, Wikimedia Commons, CC BY-SA 3.0: https://commons.wikimedia.org/wiki/File:Tachileik_Myanmar_Kayan-People-Woman-03.jpg
+- `ai-evolution.jpg` - צילום של ארז ליבנה מתוך גלריית המרצה שלו ב-Speaxit: https://speaxit.co.il/lecturer/%D7%90%D7%A8%D7%96-%D7%9C%D7%99%D7%91%D7%A0%D7%94/
+- `create-the-future.jpg` - צילום של ארז ליבנה מתוך גלריית המרצה שלו ב-Speaxit: https://speaxit.co.il/lecturer/%D7%90%D7%A8%D7%96-%D7%9C%D7%99%D7%91%D7%A0%D7%94/
+- `cinema-vs-science.jpg` - צילום של ארז ליבנה מתוך גלריית המרצה שלו ב-Speaxit: https://speaxit.co.il/lecturer/%D7%90%D7%A8%D7%96-%D7%9C%D7%99%D7%91%D7%A0%D7%94/

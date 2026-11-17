@@ -102,6 +102,50 @@ test("lecture card images appear below their descriptive text", () => {
   }
 });
 
+test("lecture cards share fixed desktop rows and equal landscape media", () => {
+  const css = read("assets/css/styles.css");
+  const ron = read("ron-livneh/index.html");
+  const erez = read("erez-livneh/index.html");
+
+  assert.match(css, /\.content-card\s*\{[^}]*display:\s*grid[^}]*grid-template-rows:\s*2rem 8\.75rem 7\.5rem auto 2rem/s);
+  assert.match(css, /\.lecture-card__image\s*\{[^}]*aspect-ratio:\s*3\s*\/\s*2/s);
+  assert.match(css, /@media \(max-width: 48rem\)[\s\S]*\.content-card\s*\{[^}]*display:\s*flex[^}]*flex-direction:\s*column/s);
+  for (const html of [ron, erez]) {
+    const cards = [...html.matchAll(/<article class="content-card">([\s\S]*?)<\/article>/g)];
+    assert.equal(cards.length, 3);
+    for (const [, card] of cards) {
+      assert.match(card, /class="lecture-card__image"[^>]*width="1600" height="1067"/);
+    }
+  }
+});
+
+test("Ron's lecture cards use her real stage photos and the approved beauty image", () => {
+  const ron = read("ron-livneh/index.html");
+  const body = read("ron-livneh/future-of-the-human-body/index.html");
+  const beauty = read("ron-livneh/dark-side-of-beauty/index.html");
+
+  assert.match(ron, /alt="רון ליבנה מרצה מול קהל על בינה מלאכותית"/);
+  assert.match(ron, /alt="רון ליבנה מרצה על במה"/);
+  assert.match(ron, /alt="רון ליבנה מרצה על רובוטיקה ועתיד הגוף"/);
+  assert.match(body, /alt="רון ליבנה מרצה על רובוטיקה ועתיד הגוף"/);
+  assert.match(ron, /אישה מקהילת הקאיאן עם טבעות צוואר מסורתיות עובדת על נול/);
+  assert.match(beauty, /CEphoto, Uwe Aranas/);
+  assert.match(beauty, /CC BY-SA 3\.0/);
+});
+
+test("Erez's lecture cards use real speaking photos from his agency gallery", () => {
+  const erez = read("erez-livneh/index.html");
+  const credits = read("assets/images/lectures/CREDITS.md");
+
+  assert.match(erez, /alt="ארז ליבנה מרצה על התפתחות הטכנולוגיה"/);
+  assert.match(erez, /alt="ארז ליבנה מרצה מול קהל"/);
+  assert.match(erez, /alt="ארז ליבנה בשיחה על במה"/);
+  assert.match(credits, /speaxit\.co\.il\/lecturer/);
+  assert.doesNotMatch(credits, /ai-evolution\.jpg.*OpenAI/);
+  assert.doesNotMatch(credits, /create-the-future\.jpg.*OpenAI/);
+  assert.doesNotMatch(credits, /cinema-vs-science\.jpg.*OpenAI/);
+});
+
 test("Ron's About section presents her technology work and human perspective", () => {
   const ron = read("ron-livneh/index.html");
   const css = read("assets/css/styles.css");

@@ -87,3 +87,19 @@ test("lecture pages describe the service and its breadcrumb trail", () => {
     assert.equal(breadcrumbs.itemListElement?.[2]?.item, service.url, path);
   }
 });
+
+test("the sitemap matches every canonical page and records the release date", () => {
+  const sitemap = read("sitemap.xml");
+  const sitemapEntries = [...sitemap.matchAll(/<url><loc>([^<]+)<\/loc><lastmod>([^<]+)<\/lastmod><\/url>/g)]
+    .map((match) => ({ url: match[1], lastModified: match[2] }));
+  const canonicalUrls = indexablePages.map((path) => {
+    const html = read(path);
+    return attributeContent(html, /<link rel="canonical" href="([^"]+)">/);
+  });
+
+  assert.deepEqual(
+    new Set(sitemapEntries.map((entry) => entry.url)),
+    new Set(canonicalUrls),
+  );
+  assert.ok(sitemapEntries.every((entry) => entry.lastModified === "2026-11-17"));
+});

@@ -86,7 +86,20 @@ test("the beauty lecture is presented as a compact secondary option", () => {
   assert.match(ron, /class="section special-feature special-feature--compact"/);
   assert.doesNotMatch(ron, /class="special-feature__mark"/);
   assert.match(css, /\.special-feature--compact\s*\{[^}]*min-height:\s*0/s);
+  assert.match(css, /\.special-feature--compact\s*\{[^}]*width:\s*min\(100% - 2rem, 50rem\)/s);
+  assert.match(css, /\.special-feature__image\s*\{[^}]*max-height:\s*10rem/s);
   assert.match(css, /\.special-feature--compact h2\s*\{[^}]*font-size:/s);
+});
+
+test("lecture card images appear below their descriptive text", () => {
+  for (const page of ["ron-livneh/index.html", "erez-livneh/index.html"]) {
+    const html = read(page);
+    const cards = [...html.matchAll(/<article class="content-card">([\s\S]*?)<\/article>/g)];
+    assert.ok(cards.length >= 3, page);
+    for (const [, card] of cards) {
+      assert.ok(card.indexOf("lecture-card__image") > card.lastIndexOf("</p>"), page);
+    }
+  }
 });
 
 test("Ron's About section presents her technology work and human perspective", () => {

@@ -133,6 +133,22 @@ test("Ron's lecture cards use her real stage photos and the approved beauty imag
   assert.match(beauty, /CC BY-SA 3\.0/);
 });
 
+test("Ron's replaced lecture photos use cache-busting URLs", () => {
+  const pages = [
+    "ron-livneh/index.html",
+    "ron-livneh/ai-understand-the-revolution/index.html",
+    "ron-livneh/future-of-work/index.html",
+    "ron-livneh/future-of-the-human-body/index.html",
+  ];
+
+  for (const page of pages) {
+    const html = read(page);
+    for (const match of html.matchAll(/src="(\/assets\/images\/lectures\/(?:ai-revolution|future-of-work|future-human-body)\.jpg[^"]*)"/g)) {
+      assert.match(match[1], /\?v=20261117$/, `${page}: ${match[1]}`);
+    }
+  }
+});
+
 test("Erez's lecture cards use real speaking photos from his agency gallery", () => {
   const erez = read("erez-livneh/index.html");
   const credits = read("assets/images/lectures/CREDITS.md");

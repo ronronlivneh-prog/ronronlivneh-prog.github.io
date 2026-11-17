@@ -14,4 +14,3 @@ Strengthen Ron Livneh's About section so it presents her as a technology and AI 
 ## Related refinement
 
 Keep "הצד האפל של היופי" visually secondary and ensure its text link has accessible contrast.
-

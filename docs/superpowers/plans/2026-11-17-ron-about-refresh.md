@@ -59,4 +59,3 @@ Expected: All tests pass and no whitespace errors are reported.
 - [ ] **Step 5: Commit and publish**
 
 Commit the focused change, push the feature branch and `main`, then verify the GitHub Pages deployment.
-

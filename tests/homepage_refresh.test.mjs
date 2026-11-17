@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { readFileSync, readdirSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
@@ -110,7 +110,59 @@ test("only internal pages show a clear link back to the homepage", () => {
   assert.ok(internalPages.length > 0);
   for (const path of internalPages) {
     const html = readFileSync(path, "utf8");
-    assert.match(html, /<a class="site-brand" href="\/">חזרה לעמוד הראשי<\/a>/, path);
+    assert.match(html, /<a[^>]+href="\/"[^>]*>חזרה לעמוד הראשי<\/a>/, path);
     assert.doesNotMatch(html, /<a class="site-brand"[^>]*>רון ליבנה · ארז ליבנה<\/a>/, path);
+  }
+});
+
+test("every lecture is represented by a local landscape image", () => {
+  const lectureImages = [
+    "ai-revolution.jpg",
+    "future-of-work.jpg",
+    "future-human-body.jpg",
+    "dark-side-beauty.jpg",
+    "ai-evolution.jpg",
+    "create-the-future.jpg",
+    "cinema-vs-science.jpg",
+  ];
+  const publicPages = publicHtmlFiles(root);
+
+  for (const filename of lectureImages) {
+    const assetPath = new URL(`../assets/images/lectures/${filename}`, import.meta.url);
+    assert.ok(existsSync(assetPath), filename);
+    const references = publicPages.filter((page) => readFileSync(page, "utf8").includes(`/assets/images/lectures/${filename}`));
+    assert.equal(references.length, 2, filename);
+  }
+});
+
+test("Ron's profile includes the two local media videos from her original site", () => {
+  const html = read("ron-livneh/index.html");
+  const mediaVideos = ["channel-14.mp4", "galileo-kan.mp4"];
+
+  assert.match(html, /id="media"/);
+  assert.match(html, /פותחים יום עם הראל סגל, ערוץ 14/);
+  assert.match(html, /גלילאו בהנחיית גאולה אבן-סער, כאן חינוכית/);
+  for (const filename of mediaVideos) {
+    const assetPath = new URL(`../assets/videos/ron/${filename}`, import.meta.url);
+    assert.ok(existsSync(assetPath), filename);
+    assert.match(html, new RegExp(`/assets/videos/ron/${filename}`));
+  }
+});
+
+test("lecture detail headers link back to both the speaker and the homepage", () => {
+  const lecturePages = [
+    ["ron-livneh/ai-understand-the-revolution/index.html", "רון", "/ron-livneh/"],
+    ["ron-livneh/future-of-work/index.html", "רון", "/ron-livneh/"],
+    ["ron-livneh/future-of-the-human-body/index.html", "רון", "/ron-livneh/"],
+    ["ron-livneh/dark-side-of-beauty/index.html", "רון", "/ron-livneh/"],
+    ["erez-livneh/evolution-of-ai/index.html", "ארז", "/erez-livneh/"],
+    ["erez-livneh/create-the-future/index.html", "ארז", "/erez-livneh/"],
+    ["erez-livneh/cinema-vs-science/index.html", "ארז", "/erez-livneh/"],
+  ];
+
+  for (const [path, speaker, speakerUrl] of lecturePages) {
+    const html = read(path);
+    assert.match(html, new RegExp(`<a[^>]+href="${speakerUrl}"[^>]*>חזרה לעמוד של ${speaker}</a>`), path);
+    assert.match(html, /<a[^>]+href="\/"[^>]*>חזרה לעמוד הראשי<\/a>/, path);
   }
 });

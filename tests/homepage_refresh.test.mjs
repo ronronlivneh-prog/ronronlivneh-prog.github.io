@@ -242,6 +242,49 @@ test("Ron's profile links to two full interviews with local thumbnails", () => {
   assert.doesNotMatch(interviews, /<iframe/);
 });
 
+test("Ron's contact forms use her verified Formspree endpoint while Erez stays safely pending", () => {
+  const ronPages = [
+    "ron-livneh/index.html",
+    "ron-livneh/ai-understand-the-revolution/index.html",
+    "ron-livneh/future-of-work/index.html",
+    "ron-livneh/future-of-the-human-body/index.html",
+    "ron-livneh/dark-side-of-beauty/index.html",
+  ];
+  const erezPages = [
+    "erez-livneh/index.html",
+    "erez-livneh/evolution-of-ai/index.html",
+    "erez-livneh/create-the-future/index.html",
+    "erez-livneh/cinema-vs-science/index.html",
+  ];
+
+  for (const path of ronPages) {
+    const form = read(path).match(/<form class="contact-form"[\s\S]*?<\/form>/)?.[0] ?? "";
+    assert.match(form, /action="https:\/\/formspree\.io\/f\/xeagpwby"/, path);
+    assert.match(form, /data-endpoint-status="ready"/, path);
+    assert.doesNotMatch(form, /<fieldset disabled>/, path);
+    assert.doesNotMatch(form, /data-local-form-notice/, path);
+  }
+
+  for (const path of erezPages) {
+    const form = read(path).match(/<form class="contact-form"[\s\S]*?<\/form>/)?.[0] ?? "";
+    assert.match(form, /data-endpoint-status="pending"/, path);
+    assert.match(form, /<fieldset disabled>/, path);
+  }
+});
+
+test("contact form script preserves success, reset and WhatsApp fallback behavior", () => {
+  const script = read("assets/js/forms.js");
+
+  assert.match(script, /button\.disabled = true/);
+  assert.match(script, /body: new FormData\(form\)/);
+  assert.match(script, /headers: \{ Accept: "application\/json" \}/);
+  assert.match(script, /if \(!response\.ok\) throw new Error/);
+  assert.match(script, /form\.reset\(\)/);
+  assert.match(script, /הפרטים נשלחו בהצלחה/);
+  assert.match(script, /אפשר לפנות אלינו ישירות בוואטסאפ/);
+  assert.match(script, /finally[\s\S]*button\.disabled = false/);
+});
+
 test("lecture detail headers link back to both the speaker and the homepage", () => {
   const lecturePages = [
     ["ron-livneh/ai-understand-the-revolution/index.html", "רון", "/ron-livneh/"],

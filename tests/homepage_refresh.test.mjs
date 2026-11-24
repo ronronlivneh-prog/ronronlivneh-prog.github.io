@@ -242,7 +242,7 @@ test("Ron's profile links to two full interviews with local thumbnails", () => {
   assert.doesNotMatch(interviews, /<iframe/);
 });
 
-test("Ron's contact forms use her verified Formspree endpoint while Erez stays safely pending", () => {
+test("contact forms use isolated verified Formspree endpoints for each speaker", () => {
   const ronPages = [
     "ron-livneh/index.html",
     "ron-livneh/ai-understand-the-revolution/index.html",
@@ -267,8 +267,10 @@ test("Ron's contact forms use her verified Formspree endpoint while Erez stays s
 
   for (const path of erezPages) {
     const form = read(path).match(/<form class="contact-form"[\s\S]*?<\/form>/)?.[0] ?? "";
-    assert.match(form, /data-endpoint-status="pending"/, path);
-    assert.match(form, /<fieldset disabled>/, path);
+    assert.match(form, /action="https:\/\/formspree\.io\/f\/xdegyaql"/, path);
+    assert.match(form, /data-endpoint-status="ready"/, path);
+    assert.doesNotMatch(form, /<fieldset disabled>/, path);
+    assert.doesNotMatch(form, /data-local-form-notice/, path);
   }
 });
 

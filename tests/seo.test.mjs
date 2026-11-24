@@ -60,6 +60,43 @@ test("Erez's profile presents the Singular School educational venture", () => {
   assert.match(html, />לאתר בית הספר הסינגולרי</);
 });
 
+test("speaker pages connect visible official profiles with structured identity data", () => {
+  const cases = [
+    {
+      path: "ron-livneh/index.html",
+      links: [
+        "https://www.facebook.com/RonLivnehTalks",
+        "https://www.linkedin.com/in/ronlivneh/",
+        "https://www.youtube.com/@ronlivneh4044",
+      ],
+    },
+    {
+      path: "erez-livneh/index.html",
+      links: [
+        "https://www.facebook.com/ErezLivnehTalks",
+        "https://www.linkedin.com/in/erez-livneh-4374773/",
+        "https://singularity-schools.com/",
+      ],
+    },
+  ];
+
+  for (const { path, links } of cases) {
+    const html = read(path);
+    const profileLinks = html.match(/<nav class="profile-links"[\s\S]*?<\/nav>/)?.[0] ?? "";
+    const person = structuredData(html).find((item) => item["@type"] === "ProfilePage")?.mainEntity;
+
+    for (const link of links) {
+      assert.match(profileLinks, new RegExp(`href="${link.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}"`), path);
+      assert.ok(person?.sameAs?.includes(link), `${path}: ${link}`);
+    }
+    assert.match(profileLinks, /target="_blank"/);
+    assert.match(profileLinks, /rel="noopener"/);
+  }
+
+  const erezData = structuredData(read("erez-livneh/index.html")).find((item) => item["@type"] === "ProfilePage");
+  assert.equal(erezData?.hasPart?.url, "https://singularity-schools.com/");
+});
+
 test("indexable pages expose unique canonical URLs and matching social metadata", () => {
   const canonicals = indexablePages.map((path) => {
     const html = read(path);

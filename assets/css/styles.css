@@ -433,7 +433,7 @@ blockquote footer { margin-block-start: 0.75rem; color: var(--muted); }
   flex: 0 0 1.45rem;
   width: 1.45rem;
   height: 1.45rem;
-  background: url("/assets/images/icons/whatsapp.svg") center / contain no-repeat;
+  background: url("/assets/images/icons/whatsapp.svg") center / 82% no-repeat;
 }
 .contact-panel__intro .whatsapp-button:hover { background: #f1faf7; }
 .site-footer { padding-block: 2rem; color: var(--muted); border-block-start: 1px solid var(--line); }

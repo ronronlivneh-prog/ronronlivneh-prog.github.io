@@ -303,10 +303,14 @@ test("all direct WhatsApp actions use the approved white and green component", (
     assert.match(link.classes, /\bwhatsapp-button\b/, link.path);
   }
   assert.ok(existsSync(iconPath));
+  const icon = readFileSync(iconPath, "utf8");
+  assert.match(icon, /viewBox="0 0 24 24"/);
+  assert.match(icon, /<title>WhatsApp<\/title>/);
+  assert.match(icon, /<path fill="#075e54"/);
   assert.match(css, /\.whatsapp-button\s*\{[^}]*background(?:-color)?:\s*white/s);
   assert.match(css, /\.whatsapp-button\s*\{[^}]*border:\s*2px solid #075e54/s);
   assert.match(css, /\.whatsapp-button\s*\{[^}]*box-shadow:/s);
-  assert.match(css, /\.whatsapp-button::before\s*\{[^}]*url\("\/assets\/images\/icons\/whatsapp\.svg"\)/s);
+  assert.match(css, /\.whatsapp-button::before\s*\{[^}]*url\("\/assets\/images\/icons\/whatsapp\.svg"\) center \/ 82% no-repeat/s);
 
   for (const path of publicPages) {
     const html = readFileSync(path, "utf8");

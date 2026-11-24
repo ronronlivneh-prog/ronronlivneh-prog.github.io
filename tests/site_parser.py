@@ -7,7 +7,7 @@ from urllib.parse import urlparse
 from xml.etree import ElementTree
 
 
-PUBLIC_ORIGIN = "https://ronronlivneh-prog.github.io"
+PUBLIC_ORIGIN = "https://www.livnehtalks.co.il"
 SITE_ROOT = Path(__file__).resolve().parents[1]
 
 

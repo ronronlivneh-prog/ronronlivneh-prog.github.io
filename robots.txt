@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://ronronlivneh-prog.github.io/sitemap.xml
+Sitemap: https://www.livnehtalks.co.il/sitemap.xml

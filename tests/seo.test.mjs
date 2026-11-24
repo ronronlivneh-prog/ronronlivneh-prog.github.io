@@ -4,7 +4,7 @@ import test from "node:test";
 
 const root = new URL("../", import.meta.url);
 const read = (relativePath) => readFileSync(new URL(relativePath, root), "utf8");
-const host = "https://ronronlivneh-prog.github.io";
+const host = "https://www.livnehtalks.co.il";
 const profilePages = ["ron-livneh/index.html", "erez-livneh/index.html"];
 const lecturePages = [
   "ron-livneh/ai-understand-the-revolution/index.html",
@@ -16,6 +16,12 @@ const lecturePages = [
   "erez-livneh/cinema-vs-science/index.html",
 ];
 const indexablePages = ["index.html", ...profilePages, ...lecturePages];
+
+test("the GitHub Pages custom domain is the canonical www host", () => {
+  assert.equal(read("CNAME").trim(), "www.livnehtalks.co.il");
+  assert.match(read("robots.txt"), /Sitemap: https:\/\/www\.livnehtalks\.co\.il\/sitemap\.xml/);
+  assert.doesNotMatch(read("sitemap.xml"), /ronronlivneh-prog\.github\.io/);
+});
 
 function attributeContent(html, selectorPattern) {
   return html.match(selectorPattern)?.[1] ?? "";

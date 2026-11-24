@@ -22,7 +22,7 @@ python -m unittest discover -s tests -v
 
 ## פעולות SEO לאחר אישור הפרסום
 
-- [ ] לאמת את `https://ronronlivneh-prog.github.io/` ב־Google Search Console.
+- [ ] לאמת את `https://www.livnehtalks.co.il/` ב־Google Search Console.
 - [ ] להגיש את `/sitemap.xml`.
 - [ ] לבקש אינדוקס לעמוד הראשי ולעמודי הפרופיל של רון ושל ארז.
 - [ ] לבקש מאתרי אמרגנים ומפרופילים מאושרים לקשר אל האתר הרשמי.

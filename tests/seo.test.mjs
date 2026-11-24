@@ -32,6 +32,24 @@ function structuredData(html) {
     .map((match) => JSON.parse(match[1]));
 }
 
+test("homepage serves organization events search intent with visible useful copy", () => {
+  const html = read("index.html");
+  const section = html.match(/<section id="organization-events"[\s\S]*?<\/section>/)?.[0] ?? "";
+
+  assert.match(section, /הרצאות לארגונים ולאירועי חברה/);
+  assert.match(section, /מנהלות משאבי אנוש/);
+  assert.match(section, /תרבות ורווחה/);
+  assert.match(section, /אירועי עובדים/);
+  assert.match(section, /כנסים מקצועיים/);
+  assert.match(section, /href="\/ron-livneh\/"/);
+  assert.match(section, /href="\/erez-livneh\/"/);
+
+  const graph = structuredData(html).find((item) => Array.isArray(item["@graph"]))?.["@graph"] ?? [];
+  const organization = graph.find((item) => item["@type"] === "Organization");
+  assert.equal(organization?.name, "Livneh Talks");
+  assert.deepEqual(organization?.founder?.map((person) => person.name), ["רון ליבנה", "ארז ליבנה"]);
+});
+
 test("Erez's profile presents the Singular School educational venture", () => {
   const html = read("erez-livneh/index.html");
 

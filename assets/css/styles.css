@@ -130,6 +130,22 @@ h1 { font-size: clamp(2.25rem, 6vw, 5rem); max-width: 15ch; }
 .gateway-section--shared-accent .speaker-card.speaker-ron .speaker-card__label,
 .gateway-section--shared-accent .speaker-card.speaker-erez .speaker-card__label { color: var(--gateway-accent); }
 .gateway-section--shared-accent .speaker-card .button { background: var(--gateway-accent); }
+.organization-events {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(14rem, 0.65fr);
+  gap: clamp(1.5rem, 4vw, 4rem);
+  align-items: center;
+  margin-block-start: clamp(2rem, 6vw, 5rem);
+  padding: clamp(1.5rem, 4vw, 3rem);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--gateway-accent-soft);
+}
+.organization-events h2 { margin-block: 0.35rem 1rem; font-size: clamp(1.9rem, 4vw, 3.4rem); }
+.organization-events p:not(.eyebrow) { max-width: 52rem; }
+.organization-events__actions { display: grid; gap: 0.8rem; }
+.organization-events__actions .button { text-align: center; background: var(--gateway-accent); }
+.organization-events__actions .button--secondary { background: transparent; color: var(--ink); border: 1px solid var(--gateway-accent); }
 
 .hero,
 .story-section,
@@ -404,6 +420,7 @@ blockquote footer { margin-block-start: 0.75rem; color: var(--muted); }
   .form-grid { grid-template-columns: 1fr; }
   .site-footer { flex-direction: column; }
   .service-grid, .consulting-section, .evidence-section { grid-template-columns: 1fr; }
+  .organization-events { grid-template-columns: 1fr; }
   .media-grid { grid-template-columns: 1fr; }
   .consulting-section figure { order: 2; }
 }

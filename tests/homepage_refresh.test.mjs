@@ -310,7 +310,7 @@ test("all direct WhatsApp actions use the approved white and green component", (
   assert.match(css, /\.whatsapp-button\s*\{[^}]*background(?:-color)?:\s*white/s);
   assert.match(css, /\.whatsapp-button\s*\{[^}]*border:\s*2px solid #075e54/s);
   assert.match(css, /\.whatsapp-button\s*\{[^}]*box-shadow:/s);
-  assert.match(css, /\.whatsapp-button::before\s*\{[^}]*url\("\/assets\/images\/icons\/whatsapp\.svg"\) center \/ 82% no-repeat/s);
+  assert.match(css, /\.whatsapp-button::before\s*\{[^}]*url\("\/assets\/images\/icons\/whatsapp\.svg\?v=20261124-2"\) center \/ 82% no-repeat/s);
 
   for (const path of publicPages) {
     const html = readFileSync(path, "utf8");

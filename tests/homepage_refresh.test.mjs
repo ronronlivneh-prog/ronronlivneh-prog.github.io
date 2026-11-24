@@ -222,6 +222,26 @@ test("Ron's profile includes the two local media videos from her original site",
   }
 });
 
+test("Ron's profile links to two full interviews with local thumbnails", () => {
+  const html = read("ron-livneh/index.html");
+  const interviews = html.match(/<div class="interview-grid">([\s\S]*?)<\/div>/)?.[1] ?? "";
+
+  assert.match(html, /<h3>ראיונות מלאים<\/h3>/);
+  assert.match(interviews, /https:\/\/www\.youtube\.com\/watch\?v=stqnsz8FWMg/);
+  assert.match(interviews, /https:\/\/www\.youtube\.com\/watch\?v=L-MmUAxecYY/);
+  assert.match(interviews, /ראיון עם רון ליבנה בתוכנית הקוד הבריאותי עם איציק וקסלר/);
+  assert.match(interviews, /מובילות שינוי עם דנה גולדרינג \| רון ליבנה/);
+  assert.match(interviews, /11:19/);
+  assert.match(interviews, /18:18/);
+  assert.match(interviews, /\/assets\/images\/ron\/interview-health-code\.jpg/);
+  assert.match(interviews, /\/assets\/images\/ron\/interview-leading-change\.jpg/);
+  assert.match(interviews, /alt="תמונת תצוגה מהראיון של רון ליבנה בתוכנית הקוד הבריאותי"/);
+  assert.match(interviews, /alt="תמונת תצוגה מהראיון של רון ליבנה בתוכנית מובילות שינוי"/);
+  assert.match(interviews, /target="_blank"/);
+  assert.match(interviews, /rel="noopener"/);
+  assert.doesNotMatch(interviews, /<iframe/);
+});
+
 test("lecture detail headers link back to both the speaker and the homepage", () => {
   const lecturePages = [
     ["ron-livneh/ai-understand-the-revolution/index.html", "רון", "/ron-livneh/"],

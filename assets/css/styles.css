@@ -388,6 +388,16 @@ blockquote footer { margin-block-start: 0.75rem; color: var(--muted); }
 }
 .media-card video { display: block; width: 100%; aspect-ratio: 16 / 9; border-radius: 0.75rem; background: #111; }
 .media-card figcaption { padding: 0.8rem 0.25rem 0.15rem; font-weight: 700; }
+.interview-section { margin-block-start: clamp(2.5rem, 6vw, 4.5rem); }
+.interview-section > p { max-width: 48rem; }
+.interview-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.25rem; margin-block-start: 1.5rem; }
+.interview-card { position: relative; overflow: hidden; border: 1px solid var(--line); border-radius: var(--radius); background: var(--paper); box-shadow: var(--shadow); }
+.interview-card a { display: grid; height: 100%; color: inherit; text-decoration: none; }
+.interview-card img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; }
+.interview-card__duration { position: absolute; inset-block-start: 0.75rem; inset-inline-start: 0.75rem; padding: 0.25rem 0.5rem; border-radius: 0.35rem; background: rgb(0 0 0 / 78%); color: white; font-size: 0.8rem; font-weight: 700; direction: ltr; }
+.interview-card__title { padding: 1rem 1rem 0.35rem; font-weight: 800; font-size: 1.1rem; }
+.interview-card__meta { padding: 0 1rem 1rem; color: var(--muted); font-size: 0.9rem; }
+.interview-card a:hover .interview-card__title { text-decoration: underline; text-underline-offset: 0.25rem; }
 .button {
   display: inline-flex;
   align-items: center;
@@ -426,6 +436,7 @@ blockquote footer { margin-block-start: 0.75rem; color: var(--muted); }
   .service-grid, .consulting-section, .evidence-section { grid-template-columns: 1fr; }
   .organization-events { grid-template-columns: 1fr; }
   .media-grid { grid-template-columns: 1fr; }
+  .interview-grid { grid-template-columns: 1fr; }
   .consulting-section figure { order: 2; }
 }
 

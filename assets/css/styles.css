@@ -415,6 +415,27 @@ blockquote footer { margin-block-start: 0.75rem; color: var(--muted); }
 .speaker-erez .button { background: var(--erez); }
 .speaker-ron .contact-panel__intro .button,
 .speaker-erez .contact-panel__intro .button { background: white; color: var(--ink); }
+.whatsapp-button {
+  gap: 0.65rem;
+  min-height: 3.25rem;
+  max-width: 100%;
+  padding: 0.8rem 1.35rem;
+  border: 2px solid #075e54;
+  border-radius: 999px;
+  background: white;
+  color: var(--ink);
+  box-shadow: 0 0.65rem 1.4rem rgb(0 0 0 / 18%);
+}
+.speaker-ron .contact-panel__intro .whatsapp-button,
+.speaker-erez .contact-panel__intro .whatsapp-button { background: white; color: var(--ink); }
+.whatsapp-button::before {
+  content: "";
+  flex: 0 0 1.45rem;
+  width: 1.45rem;
+  height: 1.45rem;
+  background: url("/assets/images/icons/whatsapp.svg") center / contain no-repeat;
+}
+.contact-panel__intro .whatsapp-button:hover { background: #f1faf7; }
 .site-footer { padding-block: 2rem; color: var(--muted); border-block-start: 1px solid var(--line); }
 
 @media (max-width: 48rem) {

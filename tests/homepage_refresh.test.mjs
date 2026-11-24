@@ -287,6 +287,33 @@ test("contact form script preserves success, reset and WhatsApp fallback behavio
   assert.match(script, /finally[\s\S]*button\.disabled = false/);
 });
 
+test("all direct WhatsApp actions use the approved white and green component", () => {
+  const publicPages = publicHtmlFiles(root);
+  const whatsappLinks = publicPages.flatMap((path) => {
+    const html = readFileSync(path, "utf8");
+    return [...html.matchAll(/<a class="([^"]*)" href="https:\/\/wa\.me\/[^"]+">[^<]+<\/a>/g)]
+      .map((match) => ({ path, classes: match[1] }));
+  });
+  const css = read("assets/css/styles.css");
+  const iconPath = new URL("../assets/images/icons/whatsapp.svg", import.meta.url);
+
+  assert.equal(whatsappLinks.length, 9);
+  for (const link of whatsappLinks) {
+    assert.match(link.classes, /\bbutton\b/, link.path);
+    assert.match(link.classes, /\bwhatsapp-button\b/, link.path);
+  }
+  assert.ok(existsSync(iconPath));
+  assert.match(css, /\.whatsapp-button\s*\{[^}]*background(?:-color)?:\s*white/s);
+  assert.match(css, /\.whatsapp-button\s*\{[^}]*border:\s*2px solid #075e54/s);
+  assert.match(css, /\.whatsapp-button\s*\{[^}]*box-shadow:/s);
+  assert.match(css, /\.whatsapp-button::before\s*\{[^}]*url\("\/assets\/images\/icons\/whatsapp\.svg"\)/s);
+
+  for (const path of publicPages) {
+    const html = readFileSync(path, "utf8");
+    assert.doesNotMatch(html, /<button[^>]*class="[^"]*whatsapp-button/);
+  }
+});
+
 test("lecture detail headers link back to both the speaker and the homepage", () => {
   const lecturePages = [
     ["ron-livneh/ai-understand-the-revolution/index.html", "רון", "/ron-livneh/"],

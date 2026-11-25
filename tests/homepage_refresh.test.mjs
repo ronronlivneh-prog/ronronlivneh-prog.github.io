@@ -13,6 +13,7 @@ function publicHtmlFiles(directoryUrl) {
     if ([".git", ".superpowers", "docs", "tests", "tmp"].includes(entry.name)) return [];
     const childPath = join(directoryPath, entry.name);
     if (entry.isDirectory()) return publicHtmlFiles(new URL(`${entry.name}/`, directoryUrl));
+    if (/^google[a-z0-9]+\.html$/i.test(entry.name)) return [];
     return entry.name.endsWith(".html") ? [childPath] : [];
   });
 }

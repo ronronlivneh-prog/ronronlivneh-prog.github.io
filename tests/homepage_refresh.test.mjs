@@ -110,7 +110,7 @@ test("Ron's organization page promotes Allied instead of Cinema City and avoids 
   );
   assert.match(
     page,
-    /<figure class="lecture-hero__media"><img src="\/assets\/images\/ron\/ron-livneh-black-suit-corrected\.png"/,
+    /<figure class="lecture-hero__media"><img class="lecture-hero__image--portrait" src="\/assets\/images\/ron\/ron-livneh-black-suit-corrected\.png"/,
   );
   assert.match(
     page,

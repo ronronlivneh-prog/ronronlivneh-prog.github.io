@@ -404,7 +404,10 @@ blockquote footer { margin-block-start: 0.75rem; color: var(--muted); }
   box-shadow: var(--shadow);
 }
 .media-card video { display: block; width: 100%; aspect-ratio: 16 / 9; border-radius: 0.75rem; background: #111; }
-.media-card figcaption { padding: 0.8rem 0.25rem 0.15rem; font-weight: 700; }
+.media-card figcaption { padding: 1rem 0.25rem 0.2rem; }
+.media-card figcaption h3 { margin: 0 0 0.45rem; font-size: 1.15rem; }
+.media-card figcaption p { margin: 0; color: var(--muted); line-height: 1.65; }
+.media-card__source { display: block; margin-top: 0.6rem; font-size: 0.9rem; font-weight: 700; color: var(--ron-accent); }
 .interview-section { margin-block-start: clamp(2.5rem, 6vw, 4.5rem); }
 .interview-section > p { max-width: 48rem; }
 .interview-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.25rem; margin-block-start: 1.5rem; }

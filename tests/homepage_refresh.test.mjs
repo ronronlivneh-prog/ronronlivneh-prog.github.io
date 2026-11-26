@@ -118,6 +118,15 @@ test("Ron's organization page promotes Allied instead of Cinema City and avoids 
   );
 });
 
+test("Erez organization service cards use their full width when no number column is present", () => {
+  const page = read("erez-livneh/innovation-futures-for-organizations/index.html");
+  const css = read("assets/css/styles.css");
+
+  assert.match(page, /class="service-grid card-grid intent-service-grid"/);
+  assert.doesNotMatch(page, /class="service-card__number"/);
+  assert.match(css, /\.intent-service-grid \.service-card\s*\{[^}]*grid-template-columns:\s*1fr/s);
+});
+
 test("the beauty lecture is presented as a compact secondary option", () => {
   const ron = read("ron-livneh/index.html");
   const css = read("assets/css/styles.css");

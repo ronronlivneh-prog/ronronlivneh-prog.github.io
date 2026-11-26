@@ -345,6 +345,7 @@ blockquote footer { margin-block-start: 0.75rem; color: var(--muted); }
 }
 .intent-card-grid .content-card h3 { margin-block-start: 0; }
 .intent-service-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.intent-service-grid .service-card { grid-template-columns: 1fr; }
 .intent-outcomes { max-width: min(78rem, calc(100% - 2rem)); margin-inline: auto; }
 .intent-checklist { display: grid; gap: 0.85rem; max-width: 58rem; margin: 2rem 0 0; padding: 0; list-style: none; }
 .intent-checklist li { position: relative; padding-inline-start: 2rem; font-size: clamp(1.05rem, 2vw, 1.25rem); }

@@ -97,6 +97,27 @@ test("both speaker pages show real company logo images and Ron shows Yael's test
   assert.match(read("assets/css/styles.css"), /\.logo-strip img\.logo-strip__logo--large\s*\{[^}]*padding:\s*0\.25rem/s);
 });
 
+test("Ron's organization page promotes Allied instead of Cinema City and avoids a repeated hero photo", () => {
+  const page = read("ron-livneh/ai-lectures-for-organizations/index.html");
+  const logoStrip = page.match(/<div class="logo-strip logo-strip--ron"[^>]*>([\s\S]*?)<\/div>/)?.[1] ?? "";
+
+  assert.doesNotMatch(logoStrip, /logo-cinema-city\.png|alt="סינמה סיטי"/);
+  assert.equal((logoStrip.match(/logo-allied-universal\.svg/g) ?? []).length, 1);
+  assert.ok(
+    logoStrip.indexOf("logo-allied-universal.svg") > logoStrip.indexOf("logo-elbit.svg")
+      && logoStrip.indexOf("logo-allied-universal.svg") < logoStrip.indexOf("logo-strauss.png"),
+    "Allied should occupy Cinema City's former position between Elbit and Strauss",
+  );
+  assert.match(
+    page,
+    /<figure class="lecture-hero__media"><img src="\/assets\/images\/ron\/ron-livneh-black-suit-corrected\.png"/,
+  );
+  assert.match(
+    page,
+    /<img class="lecture-card__image" src="\/assets\/images\/lectures\/ai-revolution\.jpg\?v=20261117"/,
+  );
+});
+
 test("the beauty lecture is presented as a compact secondary option", () => {
   const ron = read("ron-livneh/index.html");
   const css = read("assets/css/styles.css");

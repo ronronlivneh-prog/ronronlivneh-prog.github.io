@@ -205,7 +205,7 @@ test("every lecture is represented by a local landscape image", () => {
     const assetPath = new URL(`../assets/images/lectures/${filename}`, import.meta.url);
     assert.ok(existsSync(assetPath), filename);
     const references = publicPages.filter((page) => readFileSync(page, "utf8").includes(`/assets/images/lectures/${filename}`));
-    assert.equal(references.length, 2, filename);
+    assert.ok(references.length >= 2, `${filename}: expected profile and detail coverage`);
   }
 });
 

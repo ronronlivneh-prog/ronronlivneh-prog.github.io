@@ -15,7 +15,11 @@ const lecturePages = [
   "erez-livneh/create-the-future/index.html",
   "erez-livneh/cinema-vs-science/index.html",
 ];
-const indexablePages = ["index.html", ...profilePages, ...lecturePages];
+const landingPages = [
+  "ron-livneh/ai-lectures-for-organizations/index.html",
+  "erez-livneh/innovation-futures-for-organizations/index.html",
+];
+const indexablePages = ["index.html", ...profilePages, ...lecturePages, ...landingPages];
 
 test("the GitHub Pages custom domain is the canonical www host", () => {
   assert.equal(read("CNAME").trim(), "www.livnehtalks.co.il");
@@ -43,11 +47,58 @@ test("homepage serves organization events search intent with visible useful copy
   assert.match(section, /כנסים מקצועיים/);
   assert.match(section, /href="\/ron-livneh\/"/);
   assert.match(section, /href="\/erez-livneh\/"/);
+  assert.match(section, /href="\/ron-livneh\/ai-lectures-for-organizations\/"/);
+  assert.match(section, /href="\/erez-livneh\/innovation-futures-for-organizations\/"/);
 
   const graph = structuredData(html).find((item) => Array.isArray(item["@graph"]))?.["@graph"] ?? [];
   const organization = graph.find((item) => item["@type"] === "Organization");
   assert.equal(organization?.name, "Livneh Talks");
   assert.deepEqual(organization?.founder?.map((person) => person.name), ["רון ליבנה", "ארז ליבנה"]);
+});
+
+test("organization landing pages provide visible buyer-focused content and discovery paths", () => {
+  const cases = [
+    {
+      path: "ron-livneh/ai-lectures-for-organizations/index.html",
+      canonical: `${host}/ron-livneh/ai-lectures-for-organizations/`,
+      speakerProfile: "/ron-livneh/",
+      profilePath: "ron-livneh/index.html",
+      phrases: [/הרצאות בינה מלאכותית לארגונים/, /מנהלות משאבי אנוש/, /אירוע חברה/, /כנס מקצועי/],
+      lectureLinks: [
+        "/ron-livneh/ai-understand-the-revolution/",
+        "/ron-livneh/future-of-work/",
+        "/ron-livneh/future-of-the-human-body/",
+      ],
+    },
+    {
+      path: "erez-livneh/innovation-futures-for-organizations/index.html",
+      canonical: `${host}/erez-livneh/innovation-futures-for-organizations/`,
+      speakerProfile: "/erez-livneh/",
+      profilePath: "erez-livneh/index.html",
+      phrases: [/הרצאות חדשנות ועתידנות לארגונים/, /מנהלות משאבי אנוש/, /חשיבת עתיד/, /ייעוץ להנהלות/],
+      lectureLinks: [
+        "/erez-livneh/evolution-of-ai/",
+        "/erez-livneh/create-the-future/",
+        "/erez-livneh/cinema-vs-science/",
+      ],
+    },
+  ];
+
+  for (const item of cases) {
+    const html = read(item.path);
+    assert.match(html, new RegExp(`<link rel="canonical" href="${item.canonical.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}">`));
+    assert.match(html, new RegExp(`href="${item.speakerProfile}"`));
+    for (const phrase of item.phrases) assert.match(html, phrase, item.path);
+    for (const href of item.lectureLinks) assert.match(html, new RegExp(`href="${href}"`), item.path);
+    assert.match(read(item.profilePath), new RegExp(`href="/${item.path.replace(/index\.html$/, "")}"`));
+
+    const data = structuredData(html).find((entry) => Array.isArray(entry["@graph"]));
+    const service = data?.["@graph"].find((entry) => entry["@type"] === "Service");
+    const breadcrumbs = data?.["@graph"].find((entry) => entry["@type"] === "BreadcrumbList");
+    assert.equal(service?.url, item.canonical, item.path);
+    assert.equal(service?.areaServed, "ישראל", item.path);
+    assert.equal(breadcrumbs?.itemListElement?.at(-1)?.item, item.canonical, item.path);
+  }
 });
 
 test("Erez's profile presents the Singular School educational venture", () => {

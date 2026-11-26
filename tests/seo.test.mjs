@@ -138,6 +138,21 @@ test("organization landing pages include proof, event fit, and direct lead forms
   assert.match(read(cases[0].path), /class="testimonial-quote"/);
 });
 
+test("Ron's organization lecture cards use stage images with non-overlapping rows", () => {
+  const html = read("ron-livneh/ai-lectures-for-organizations/index.html");
+  const css = read("assets/css/styles.css");
+  const cards = [...html.matchAll(/<article class="content-card">([\s\S]*?)<\/article>/g)];
+  const expectedImages = ["ai-revolution.jpg", "future-of-work.jpg", "future-human-body.jpg"];
+
+  assert.equal(cards.length, 3);
+  cards.forEach(([, card], index) => {
+    assert.match(card, new RegExp(`/assets/images/lectures/${expectedImages[index].replace(".", "\\.")}\\?v=20261117`));
+    assert.ok(card.indexOf("<p>") < card.indexOf("lecture-card__image"));
+    assert.ok(card.indexOf("lecture-card__image") < card.indexOf("לפרטי ההרצאה"));
+  });
+  assert.match(css, /\.intent-card-grid \.content-card\s*\{[^}]*grid-template-rows:\s*minmax\(7\.5rem, auto\) minmax\(7\.5rem, auto\) auto 2rem/s);
+});
+
 test("Erez's profile presents the Singular School educational venture", () => {
   const html = read("erez-livneh/index.html");
 

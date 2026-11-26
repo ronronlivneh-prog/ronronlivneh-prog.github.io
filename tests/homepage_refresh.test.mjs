@@ -124,6 +124,9 @@ test("Erez organization service cards use their full width when no number column
 
   assert.match(page, /class="service-grid card-grid intent-service-grid"/);
   assert.doesNotMatch(page, /class="service-card__number"/);
+  assert.match(page, /<h3>ייעוץ לדרג הניהולי<\/h3>/);
+  assert.match(page, /<option>ייעוץ לדרג הניהולי<\/option>/);
+  assert.doesNotMatch(page, /<h3>ייעוץ להנהלות<\/h3>/);
   assert.match(css, /\.intent-service-grid \.service-card\s*\{[^}]*grid-template-columns:\s*1fr/s);
 });
 

@@ -123,11 +123,14 @@ test("Erez organization service cards use their full width when no number column
   const css = read("assets/css/styles.css");
 
   assert.match(page, /class="service-grid card-grid intent-service-grid"/);
+  assert.match(page, /href="\/assets\/css\/styles\.css\?v=20261126-1"/);
   assert.doesNotMatch(page, /class="service-card__number"/);
   assert.match(page, /<h3>ייעוץ לדרג הניהולי<\/h3>/);
   assert.match(page, /<option>ייעוץ לדרג הניהולי<\/option>/);
   assert.doesNotMatch(page, /<h3>ייעוץ להנהלות<\/h3>/);
-  assert.match(css, /\.intent-service-grid \.service-card\s*\{[^}]*grid-template-columns:\s*1fr/s);
+  assert.match(css, /\.service-grid\.intent-service-grid\s*\{[^}]*grid-template-columns:\s*repeat\(3, minmax\(0, 1fr\)\)/s);
+  assert.match(css, /\.service-grid\.intent-service-grid \.service-card\s*\{[^}]*grid-template-columns:\s*1fr/s);
+  assert.match(css, /@media \(max-width:\s*48rem\)[\s\S]*\.service-grid\.intent-service-grid\s*\{[^}]*grid-template-columns:\s*1fr/s);
 });
 
 test("the beauty lecture is presented as a compact secondary option", () => {

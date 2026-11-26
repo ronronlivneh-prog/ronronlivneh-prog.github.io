@@ -48,7 +48,7 @@ class SiteTests(unittest.TestCase):
     def test_speaker_profiles_show_company_logos_and_approved_testimonial(self):
         ron = (ROOT / "ron-livneh/index.html").read_text(encoding="utf-8")
         erez = (ROOT / "erez-livneh/index.html").read_text(encoding="utf-8")
-        self.assertEqual(ron.count('<img src="/assets/images/ron/logos/logo-'), 9)
+        self.assertEqual(ron.count('/assets/images/ron/logos/logo-'), 9)
         self.assertGreaterEqual(erez.count('<img src="/assets/images/erez/logos/logo-'), 6)
         self.assertNotIn('class="client-list"', erez)
         self.assertIn('class="logo-strip logo-strip--erez"', erez)
@@ -82,7 +82,11 @@ class SiteTests(unittest.TestCase):
             self.assertGreater(poster.stat().st_size, 10_000, filename)
 
     def test_every_page_has_unique_indexable_metadata(self):
-        pages = [parse_page(path) for path in public_html_files(ROOT) if path.name != "404.html"]
+        pages = [
+            parse_page(path)
+            for path in public_html_files(ROOT)
+            if path.name not in {"404.html", "googlef522861f96138838.html"}
+        ]
         self.assertEqual(len({page.title for page in pages}), len(pages))
         descriptions = [page.meta.get("description", "") for page in pages]
         self.assertTrue(all(descriptions))
@@ -97,23 +101,27 @@ class SiteTests(unittest.TestCase):
         expected = {
             PUBLIC_ORIGIN + parse_page(path).public_url
             for path in public_html_files(ROOT)
-            if path.name != "404.html"
+            if path.name not in {"404.html", "googlef522861f96138838.html"}
         }
         self.assertEqual(read_sitemap_urls(ROOT / "sitemap.xml"), expected)
 
-    def test_contact_routes_match_page_owner_in_local_mode(self):
+    def test_contact_routes_match_page_owner_and_live_endpoint(self):
+        endpoints = {
+            "ron": "https://formspree.io/f/xeagpwby",
+            "erez": "https://formspree.io/f/xdegyaql",
+        }
         for path in public_html_files(ROOT):
             page = parse_page(path)
             if page.speaker not in {"ron", "erez"}:
                 continue
             self.assertEqual({form.speaker for form in page.forms}, {page.speaker}, str(path))
-            self.assertEqual({form.action for form in page.forms}, {""}, str(path))
+            self.assertEqual({form.action for form in page.forms}, {endpoints[page.speaker]}, str(path))
             self.assertEqual({link.speaker for link in page.whatsapp_links}, {page.speaker}, str(path))
             self.assertRegex(page.whatsapp_links[0].href, r"^https://wa\.me/[1-9]\d{7,14}\?text=", str(path))
 
     def test_contact_forms_have_required_fields_and_status_target(self):
         forms = all_contact_forms(ROOT)
-        self.assertEqual(len(forms), 9)
+        self.assertEqual(len(forms), 11)
         for form in forms:
             self.assertEqual(
                 form.required_names,
@@ -121,10 +129,10 @@ class SiteTests(unittest.TestCase):
             )
             self.assertTrue(form.status_target_exists)
 
-    def test_local_only_forms_are_visibly_inert(self):
+    def test_live_forms_are_enabled_without_local_pending_notice(self):
         for form in all_contact_forms(ROOT):
-            self.assertTrue(form.pending_notice_exists)
-            self.assertTrue(form.pending_controls_disabled)
+            self.assertFalse(form.pending_notice_exists)
+            self.assertFalse(form.pending_controls_disabled)
 
     def test_contact_whatsapp_buttons_keep_accessible_contrast(self):
         css = (ROOT / "assets/css/styles.css").read_text(encoding="utf-8")

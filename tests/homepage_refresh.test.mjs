@@ -267,7 +267,7 @@ test("Ron's profile includes the two local media videos from her original site",
   const mediaVideos = ["channel-14.mp4", "galileo-kan.mp4"];
 
   assert.match(html, /id="media"/);
-  assert.match(html, /פותחים יום עם הראל סגל, ערוץ 14/);
+  assert.match(html, /הדו״ח של אראל עם אראל סג״ל, ערוץ 14/);
   assert.match(html, /גלילאו בהנחיית גאולה אבן-סער, כאן חינוכית/);
   for (const filename of mediaVideos) {
     const assetPath = new URL(`../assets/videos/ron/${filename}`, import.meta.url);

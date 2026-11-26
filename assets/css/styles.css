@@ -143,9 +143,21 @@ h1 { font-size: clamp(2.25rem, 6vw, 5rem); max-width: 15ch; }
 }
 .organization-events h2 { margin-block: 0.35rem 1rem; font-size: clamp(1.9rem, 4vw, 3.4rem); }
 .organization-events p:not(.eyebrow) { max-width: 52rem; }
-.organization-events__actions { display: grid; gap: 0.8rem; }
-.organization-events__actions .button { text-align: center; background: var(--gateway-accent); }
-.organization-events__actions .button--secondary { background: transparent; color: var(--ink); border: 1px solid var(--gateway-accent); }
+.organization-events__actions { display: grid; gap: 1.25rem; }
+.organization-events__choice { display: grid; gap: 0.45rem; text-align: center; }
+.organization-events__choice .button { width: 100%; margin: 0; text-align: center; }
+.organization-events__choice--ron .button { background: var(--ron); }
+.organization-events__choice--erez .button { background: var(--erez); }
+.organization-events__profile-link {
+  width: fit-content;
+  margin-inline: auto;
+  color: var(--muted);
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-underline-offset: 0.25em;
+}
+.organization-events__choice--ron .organization-events__profile-link { color: #075f5b; }
+.organization-events__choice--erez .organization-events__profile-link { color: #8a3d18; }
 
 .hero,
 .story-section,

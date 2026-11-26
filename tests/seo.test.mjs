@@ -49,6 +49,9 @@ test("homepage serves organization events search intent with visible useful copy
   assert.match(section, /href="\/erez-livneh\/"/);
   assert.match(section, /href="\/ron-livneh\/ai-lectures-for-organizations\/"/);
   assert.match(section, /href="\/erez-livneh\/innovation-futures-for-organizations\/"/);
+  assert.match(section, />חדשנות וחשיבת עתיד בארגונים עם ארז</);
+  assert.match(section, /class="organization-events__choice organization-events__choice--ron"[\s\S]*>הכירו את רון</);
+  assert.match(section, /class="organization-events__choice organization-events__choice--erez"[\s\S]*>הכירו את ארז</);
 
   const graph = structuredData(html).find((item) => Array.isArray(item["@graph"]))?.["@graph"] ?? [];
   const organization = graph.find((item) => item["@type"] === "Organization");

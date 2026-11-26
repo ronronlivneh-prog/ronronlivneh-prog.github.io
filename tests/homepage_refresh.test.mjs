@@ -58,6 +58,16 @@ test("shared homepage labels win over speaker colors and Ron story portrait keep
   assert.match(css, /\.story-section__portrait\s*\{[^}]*object-position:\s*center 18%/s);
 });
 
+test("organization routes use each speaker color and keep profile links grouped", () => {
+  const css = read("assets/css/styles.css");
+  const homepage = read("index.html");
+
+  assert.match(css, /\.organization-events__choice--ron \.button\s*\{[^}]*background:\s*var\(--ron\)/s);
+  assert.match(css, /\.organization-events__choice--erez \.button\s*\{[^}]*background:\s*var\(--erez\)/s);
+  assert.match(homepage, /organization-events__choice--ron[\s\S]*href="\/ron-livneh\/ai-lectures-for-organizations\/"[\s\S]*href="\/ron-livneh\/"/);
+  assert.match(homepage, /organization-events__choice--erez[\s\S]*href="\/erez-livneh\/innovation-futures-for-organizations\/"[\s\S]*href="\/erez-livneh\/"/);
+});
+
 test("both speaker pages show real company logo images and Ron shows Yael's testimonial", () => {
   const ron = read("ron-livneh/index.html");
   const erez = read("erez-livneh/index.html");

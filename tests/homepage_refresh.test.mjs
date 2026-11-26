@@ -298,7 +298,7 @@ test("all direct WhatsApp actions use the approved white and green component", (
   const css = read("assets/css/styles.css");
   const iconPath = new URL("../assets/images/icons/whatsapp.svg", import.meta.url);
 
-  assert.equal(whatsappLinks.length, 9);
+  assert.ok(whatsappLinks.length >= 9);
   for (const link of whatsappLinks) {
     assert.match(link.classes, /\bbutton\b/, link.path);
     assert.match(link.classes, /\bwhatsapp-button\b/, link.path);

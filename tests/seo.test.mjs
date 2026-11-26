@@ -63,7 +63,7 @@ test("organization landing pages provide visible buyer-focused content and disco
       canonical: `${host}/ron-livneh/ai-lectures-for-organizations/`,
       speakerProfile: "/ron-livneh/",
       profilePath: "ron-livneh/index.html",
-      phrases: [/הרצאות בינה מלאכותית לארגונים/, /מנהלות משאבי אנוש/, /אירוע חברה/, /כנס מקצועי/],
+      phrases: [/הרצאות בינה מלאכותית לארגונים/, /מנהלות משאבי אנוש/, /אירועי? חברה/, /כנסים? מקצועיים?/],
       lectureLinks: [
         "/ron-livneh/ai-understand-the-revolution/",
         "/ron-livneh/future-of-work/",
@@ -99,6 +99,41 @@ test("organization landing pages provide visible buyer-focused content and disco
     assert.equal(service?.areaServed, "ישראל", item.path);
     assert.equal(breadcrumbs?.itemListElement?.at(-1)?.item, item.canonical, item.path);
   }
+});
+
+test("organization landing pages include proof, event fit, and direct lead forms", () => {
+  const cases = [
+    {
+      path: "ron-livneh/ai-lectures-for-organizations/index.html",
+      endpoint: "https://formspree.io/f/xeagpwby",
+      client: /אלייד יוניברסל/,
+      speaker: "ron",
+    },
+    {
+      path: "erez-livneh/innovation-futures-for-organizations/index.html",
+      endpoint: "https://formspree.io/f/xdegyaql",
+      client: /Google/,
+      speaker: "erez",
+    },
+  ];
+
+  for (const item of cases) {
+    const html = read(item.path);
+    assert.match(html, /ימי עיון/, item.path);
+    assert.match(html, /אירועי חברה/, item.path);
+    assert.match(html, /כנסים/, item.path);
+    assert.match(html, /<section[^>]+class="[^"]*proof-section/, item.path);
+    assert.match(html, /class="[^"]*logo-strip/, item.path);
+    assert.match(html, item.client, item.path);
+    assert.match(html, /<section id="contact"[^>]+class="[^"]*contact-panel/, item.path);
+    assert.match(html, /<script src="\/assets\/js\/forms\.js" defer><\/script>/, item.path);
+    assert.match(html, new RegExp(`action="${item.endpoint.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}"`), item.path);
+    assert.match(html, new RegExp(`data-speaker="${item.speaker}"`), item.path);
+    assert.match(html, /data-contact-form/, item.path);
+    assert.match(html, /שליחת פרטים/, item.path);
+  }
+
+  assert.match(read(cases[0].path), /class="testimonial-quote"/);
 });
 
 test("Erez's profile presents the Singular School educational venture", () => {

@@ -36,6 +36,64 @@ function structuredData(html) {
     .map((match) => JSON.parse(match[1]));
 }
 
+function structuredEntities(html) {
+  return structuredData(html).flatMap((entry) => entry["@graph"] ?? [entry]);
+}
+
+test("Ron's local videos expose visible context, stable posters, and VideoObject data", () => {
+  const html = read("ron-livneh/index.html");
+  const cards = [...html.matchAll(/<figure class="media-card">([\s\S]*?)<\/figure>/g)].map((match) => match[1]);
+
+  assert.equal(cards.length, 2);
+  for (const card of cards) {
+    assert.match(card, /<video[^>]+poster="\/assets\/images\/ron\/video-[^"]+-poster\.jpg"/);
+    assert.match(card, /<figcaption>[\s\S]*?<h3>[^<]+<\/h3>[\s\S]*?<p>[^<]{40,}<\/p>[\s\S]*?<\/figcaption>/);
+  }
+
+  const videos = structuredEntities(html).filter((entry) => entry["@type"] === "VideoObject");
+  assert.equal(videos.length, 2);
+  for (const video of videos) {
+    assert.match(video.name, /רון ליבנה/);
+    assert.ok(video.description.length >= 50);
+    assert.match(video.thumbnailUrl, /^https:\/\/www\.livnehtalks\.co\.il\/assets\/images\/ron\/video-[^/]+-poster\.jpg$/);
+    assert.match(video.uploadDate, /^\d{4}-\d{2}-\d{2}$/);
+    assert.match(video.duration, /^PT(?=.*\d)[\dHMS]+$/);
+    assert.match(video.contentUrl, /^https:\/\/www\.livnehtalks\.co\.il\/assets\/videos\/ron\/(channel-14|galileo-kan)\.mp4$/);
+    assert.equal(video.creator?.["@id"], `${host}/ron-livneh/#person`);
+  }
+});
+
+test("approved Hebrew search intents are mapped to visible relevant pages", () => {
+  const cases = [
+    {
+      path: "ron-livneh/index.html",
+      phrases: ["רון ליבנה מרצה", "הרצאות מדע וטכנולוגיה"],
+    },
+    {
+      path: "ron-livneh/ai-lectures-for-organizations/index.html",
+      phrases: ["מרצה לבינה מלאכותית", "הרצאה על בינה מלאכותית", "הרצאות AI לארגונים", "הרצאה לאירוע חברה"],
+    },
+    {
+      path: "ron-livneh/future-of-work/index.html",
+      phrases: ["הרצאה על עתיד העבודה"],
+    },
+    {
+      path: "erez-livneh/index.html",
+      phrases: ["ארז ליבנה מרצה", "מרצה לחדשנות", "הרצאות עתידנות", "הרצאות מדע וטכנולוגיה"],
+    },
+    {
+      path: "erez-livneh/innovation-futures-for-organizations/index.html",
+      phrases: ["הרצאות חדשנות לארגונים", "סדנת חשיבת עתיד", "סדנת חדשנות ארגונית", "ייעוץ חדשנות להנהלות"],
+    },
+  ];
+
+  for (const { path, phrases } of cases) {
+    const html = read(path);
+    const visibleBody = html.match(/<body[\s\S]*<\/body>/)?.[0] ?? "";
+    for (const phrase of phrases) assert.match(visibleBody, new RegExp(phrase), `${path}: ${phrase}`);
+  }
+});
+
 test("homepage serves organization events search intent with visible useful copy", () => {
   const html = read("index.html");
   const section = html.match(/<section id="organization-events"[\s\S]*?<\/section>/)?.[0] ?? "";

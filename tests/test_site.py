@@ -71,6 +71,16 @@ class SiteTests(unittest.TestCase):
         self.assertIn("max-inline-size: 100%", css)
         self.assertIn("@media (max-width: 48rem)", css)
 
+    def test_local_video_assets_are_web_optimized_and_have_posters(self):
+        video_dir = ROOT / "assets/videos/ron"
+        image_dir = ROOT / "assets/images/ron"
+        self.assertLess((video_dir / "channel-14.mp4").stat().st_size, 20_000_000)
+        self.assertLess((video_dir / "galileo-kan.mp4").stat().st_size, 8_000_000)
+        for filename in ["video-channel-14-poster.jpg", "video-galileo-kan-poster.jpg"]:
+            poster = image_dir / filename
+            self.assertTrue(poster.exists(), filename)
+            self.assertGreater(poster.stat().st_size, 10_000, filename)
+
     def test_every_page_has_unique_indexable_metadata(self):
         pages = [parse_page(path) for path in public_html_files(ROOT) if path.name != "404.html"]
         self.assertEqual(len({page.title for page in pages}), len(pages))

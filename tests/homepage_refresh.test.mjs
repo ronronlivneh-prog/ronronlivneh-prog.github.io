@@ -72,14 +72,18 @@ test("organization routes use each speaker color without redundant profile links
 
 test("both speaker pages show real company logo images and Ron shows Yael's testimonial", () => {
   const ron = read("ron-livneh/index.html");
+  const ronOrganizations = read("ron-livneh/ai-lectures-for-organizations/index.html");
   const erez = read("erez-livneh/index.html");
-  const ronLogos = ron.match(/<img src="\/assets\/images\/ron\/logos\/logo-[^"]+" alt="[^"]+"/g) ?? [];
-  const erezLogos = erez.match(/<img src="\/assets\/images\/erez\/logos\/logo-[^"]+" alt="[^"]+"/g) ?? [];
+  const ronLogos = ron.match(/<img[^>]+src="\/assets\/images\/ron\/logos\/logo-[^"]+"[^>]+alt="[^"]+"/g) ?? [];
+  const erezLogos = erez.match(/<img[^>]+src="\/assets\/images\/erez\/logos\/logo-[^"]+"[^>]+alt="[^"]+"/g) ?? [];
 
   assert.equal(ronLogos.length, 9);
   assert.match(ron, /class="logo-strip logo-strip--ron"/);
-  assert.match(ron, /logo-mr-coral\.png" alt="Mr\. Coral"/);
+  assert.match(ron, /logo-mr-coral-landscape\.png" alt="Coral Creative Technologies"/);
   assert.match(ron, /logo-israel-engineers-association\.png" alt="אגודת בית ההנדסאי והטכנאי"/);
+  assert.match(ronOrganizations, /logo-mr-coral-landscape\.png" alt="Coral Creative Technologies"/);
+  assert.match(ronOrganizations, /logo-israel-engineers-association\.png" alt="אגודת בית ההנדסאי והטכנאי"/);
+  assert.match(ronOrganizations, /class="logo-strip__logo--large" src="\/assets\/images\/ron\/logos\/logo-strauss\.png"/);
   assert.ok(erezLogos.length >= 6);
   assert.doesNotMatch(erez, /class="client-list"/);
   assert.match(erez, /class="logo-strip logo-strip--erez"/);
@@ -90,6 +94,7 @@ test("both speaker pages show real company logo images and Ron shows Yael's test
   assert.match(ron, /רון מרצה רהוטה, מקצועית, נעימה וקולחת\./);
   assert.match(ron, /נהננו מאוד!<br>תודה רבה!/);
   assert.doesNotMatch(read("assets/css/styles.css"), /\.logo-strip img\s*\{[^}]*grayscale/s);
+  assert.match(read("assets/css/styles.css"), /\.logo-strip img\.logo-strip__logo--large\s*\{[^}]*padding:\s*0\.25rem/s);
 });
 
 test("the beauty lecture is presented as a compact secondary option", () => {

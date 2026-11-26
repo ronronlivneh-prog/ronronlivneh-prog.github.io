@@ -259,6 +259,7 @@ h1 { font-size: clamp(2.25rem, 6vw, 5rem); max-width: 15ch; }
   background: white;
   object-fit: contain;
 }
+.logo-strip img.logo-strip__logo--large { padding: 0.25rem; }
 .proof-section > p:not(.eyebrow) { max-width: 58rem; }
 .testimonial-quote p { line-height: 1.55; }
 blockquote { max-width: 50rem; margin: 3rem 0 0; padding-inline-start: 1.5rem; border-inline-start: 0.35rem solid var(--ron); }
